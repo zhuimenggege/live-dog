@@ -1,0 +1,14 @@
+err-login-fail-msg = "用户名或密码错误"
+err-login-code-fail-msg = "验证码错误"
+err-auth-fail-msg  = "没有授权或请求超时"
+success = "操作成功"
+
+add-failed = "数据添加失败"
+delete-failed = "数据删除失败"
+get-failed = "数据获取失败"
+list-failed = "数据列表获取失败"
+update-failed = "数据修改失败"
+
+data-code-empty = "数据编码不能为空"
+data-not-found = "数据不存在"
+id-empty = "数据ID不能为空"

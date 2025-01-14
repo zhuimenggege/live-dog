@@ -1,0 +1,28 @@
+# system
+role-menu-set-failed = "设置角色菜单失败"
+user-avatar-failed = "修改用户头像失败"
+user-profile-failed = "获取用户信息失败"
+user-password-failed = "修改用户密码失败"
+user-password-reset-failed = "重置用户密码失败"
+user-role-set-failed = "设置用户角色失败"
+user-role-cancel-failed = "取消分配用户失败"
+user-role-cancel-batch-failed = "批量取消分配用户失败"
+
+# system-valid
+user-name-empty = "用户名不允许为空"
+user-name-exists = "用户名已经存在"
+user-nickname-empty = "用户昵称不允许为空"
+user-nickname-exists = "用户昵称已经存在"
+user-old-password-error = "旧密码错误"
+user-password-rules = "密码不能为空,且用户密码长度必须介于 5 和 20 之间"
+role-key-empty = "权限字符不允许为空"
+role-name-exists = "角色名称已经存在"
+
+
+# live-valid
+monitor-time-empty = "定时监控时间不可以为空"
+monitor-time-same = "定时监控时间不可以相同"
+monitor-time-short = "定时监控时间间隔不能小于2分钟"
+room-url-empty = "房间地址不允许为空"
+room-url-not-allowed = "房间地址非法"
+room-url-parse-failed = "房间地址解析失败"

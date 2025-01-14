@@ -1,0 +1,17 @@
+.idea/
+.project
+.settings/
+.swp
+.vscode/
+**/.DS_Store
+bin/
+hack/config.yaml
+manifest/output/
+manifest/config/config.yaml
+main
+main.exe
+main.exe~
+output/
+resource/log/
+resource/file/
+temp/
