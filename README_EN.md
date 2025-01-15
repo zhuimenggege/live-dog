@@ -5,7 +5,7 @@
 
 [简体中文](./README.md) ｜ English
 
-# Live-Dog
+# Intro
 
 Live-Dog is a live broadcast recording tool built on GoFrame and RuoYi-Vue3 (currently only supports the Tik Tok platform).
 
@@ -113,6 +113,10 @@ Live-Dog is a live broadcast recording tool built on GoFrame and RuoYi-Vue3 (cur
       <td>✅</td>
     </tr>
   </table>
+
+## License
+
+  Mit
 
 ## Thanks
 

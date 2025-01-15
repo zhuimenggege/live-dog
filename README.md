@@ -1,15 +1,21 @@
 <p align="center">
-  <img src="web/src/assets/images/profile.jpg" height="128">
+  <img src="./resource/assets/profile/profile.jpg" height="128">
   <h1 align="center">Live Dog</h1>
 </p>
 
 简体中文 ｜ [English](./README_EN.md)
 
-# Live Dog
+## 简介
 
 Live Dog 是一个基于 GoFrame 和 RuoYi-Vue3 构建的直播录制工具（暂只支持抖音平台）。
 
 *本项目仅用于学习交流，不涉及任何（包括存储、上传、爬取等）私人信息。*
+
+<img src="./resource/assets/screenshots/live/live_manage.jpg" />
+<div align="center">
+  <img src="./resource/assets/screenshots/live/live_add.jpg" width="49%" />
+  <img src="./resource/assets/screenshots/admin/push_channel_add.jpg" width="49%" />
+</div>
 
 ## 架构
 
@@ -118,6 +124,10 @@ Live Dog 是一个基于 GoFrame 和 RuoYi-Vue3 构建的直播录制工具（�
       <td>✅</td>
     </tr>
   </table>
+
+## License
+
+  Mit
 
 ## 感谢
 

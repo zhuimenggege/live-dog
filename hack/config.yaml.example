@@ -12,5 +12,21 @@ gfcli:
         noModelComment:  true
         path: "./internal/app/admin"
     service:
-      srcFolder: "internal/app/common/logic"
-      dstFolder:  "internal/app/common/service"
+      srcFolder: "internal/app/common/logic" # logic folder
+      dstFolder:  "internal/app/common/service" # service folder
+  build:
+    name:     "main"
+    arch:     "amd64"
+    system:   "linux"
+    mod:      "none"
+    packSrc:  "api,i18n,internal"
+    packDst:  "temp/pack.go"
+    path:     "./temp"
+  docker:
+    build:
+      name: "main"
+      arch: "amd64"
+      system: "linux"
+      extra: "--no-cache"
+    tagName: "your_tag:your_version"
+    TagPrefixes: "your_register_prefix"
