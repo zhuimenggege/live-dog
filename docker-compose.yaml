@@ -6,7 +6,8 @@ services:
     ports:
       - '9876:9876'
     volumes:
-      - /Users/shichen/Downloads/upload:/LiveDog/upload
-      - /Users/shichen/Downloads/output:/LiveDog/video
+      - /your_home_folder/upload:/LiveDog/upload
+      - /your_home_folder/output:/LiveDog/video
     environment:
-      - DATABASE_DEFAULT_LINK=mysql:root:123456@tcp(192.168.3.16:13306)/live-dog-copy?charset=utf8mb4&parseTime=true&loc=Local
+      - DATABASE_DEFAULT_LINK=mysql:root:123456@tcp(127.0.0.1:3306)/db_name?charset=utf8mb4&parseTime=true&loc=Local
+      - PROJECT_SM4KEY=abcdefghijklmnopqrstuvwxyz123456 # SM4加密密钥, 32位字符
