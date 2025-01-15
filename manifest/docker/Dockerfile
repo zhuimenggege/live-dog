@@ -6,21 +6,24 @@ FROM --platform=linux/amd64 alpine
 LABEL maintainer="shichen437 <shichen437@126.com>"
 
 ENV WORKDIR=/LiveDog
-ENV TZ=Asia/Shanghai \
-    PROJECT_UPLOAD=$WORKDIR/upload \
+ENV TZ=Asia/Shanghai
+ENV PROJECT_UPLOAD=$WORKDIR/upload \
     PROJECT_OUTPUT=$WORKDIR/video
 
 RUN mkdir -p $PROJECT_OUTPUT && \
     mkdir -p $PROJECT_UPLOAD && \
-    apk --no-cache add nginx ffmpeg libc6-compat
+    apk --no-cache add nginx ffmpeg libc6-compat tzdata coreutils && \
+    ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
 
 ADD web/nginx.conf /etc/nginx/nginx.conf
-COPY web/dist /usr/share/nginx/html
+
 COPY i18n $WORKDIR/i18n
 COPY manifest/config/config_docker.yaml $WORKDIR/config.yaml
+COPY manifest/docker/entrypoint.sh /entrypoint.sh
 COPY manifest/migrate $WORKDIR/manifest/migrate
 COPY temp/linux_amd64/main $WORKDIR/main
-COPY entrypoint.sh /entrypoint.sh
+COPY web/dist /usr/share/nginx/html
 
 RUN chmod +x /entrypoint.sh
 
