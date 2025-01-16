@@ -102,15 +102,15 @@ Live-Dog is a live broadcast recording tool built on GoFrame and RuoYi-Vue3 (cur
   <table>
     <tr align="center">
       <th>Platform</th>
-      <th>Url</th>
-      <th>Support</th>
+      <th>Url Demo</th>
       <th>Cookie</th>
+      <th>Remark</th>
     </tr>
     <tr align="center">
       <td>抖音</td>
-      <td>live.douyin.com</td>
+      <td>https://live.douyin.com/123456789</td>
       <td>✅</td>
-      <td>✅</td>
+      <td></td>
     </tr>
   </table>
 

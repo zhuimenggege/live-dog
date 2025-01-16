@@ -113,15 +113,15 @@ Live Dog 是一个基于 GoFrame 和 RuoYi-Vue3 构建的直播录制工具（�
   <table>
     <tr align="center">
       <th>平台</th>
-      <th>url</th>
-      <th>是否支持</th>
+      <th>URL示例</th>
       <th>Cookie</th>
+      <th>备注</th>
     </tr>
     <tr align="center">
       <td>抖音</td>
-      <td>live.douyin.com</td>
+      <td>https://live.douyin.com/123456789</td>
       <td>✅</td>
-      <td>✅</td>
+      <td>推荐使用直播间 URL</td>
     </tr>
   </table>
 
