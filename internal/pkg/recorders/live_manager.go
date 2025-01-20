@@ -5,17 +5,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/shichen437/live-dog/internal/app/live/dao"
-	"github.com/shichen437/live-dog/internal/app/live/model/do"
 	"github.com/shichen437/live-dog/internal/pkg/events"
 	"github.com/shichen437/live-dog/internal/pkg/interfaces"
 	"github.com/shichen437/live-dog/internal/pkg/lives"
-	"github.com/shichen437/live-dog/internal/pkg/message_push"
 	"github.com/shichen437/live-dog/internal/pkg/utils"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gtime"
 )
 
 func NewManager(ctx context.Context) Manager {
@@ -47,10 +43,12 @@ type manager struct {
 func (m *manager) registryListener(ctx context.Context, ed events.Dispatcher) {
 	ed.AddEventListener("LiveStart", events.NewEventListener(func(event *events.Event) {
 		live := event.Object.(lives.Live)
-		if err := m.AddRecorder(ctx, live); err != nil {
+		err := m.AddRecorder(ctx, live)
+		if err != nil {
 			g.Log().Error(ctx, "failed to add recorder")
+			return
 		}
-		go message_push.LivePush(ctx, live.GetLiveId())
+		liveStartBiz(ctx, live.GetLiveId())
 	}))
 
 	ed.AddEventListener("NameChanged", events.NewEventListener(func(event *events.Event) {
@@ -69,34 +67,15 @@ func (m *manager) registryListener(ctx context.Context, ed events.Dispatcher) {
 		if !m.HasRecorder(ctx, live.GetLiveId()) {
 			return
 		}
-		if err := m.RemoveRecorder(ctx, live.GetLiveId()); err != nil {
+		err := m.RemoveRecorder(ctx, live.GetLiveId())
+		if err != nil {
 			g.Log().Error(ctx, "failed to remove recorder")
+			return
 		}
+		liveEndBiz(ctx, live.GetLiveId())
 	})
 	ed.AddEventListener("LiveEnd", removeEvtListener)
 	ed.AddEventListener("ListenStop", removeEvtListener)
-}
-
-func (*manager) updateName(ctx context.Context, live lives.Live) {
-	roomInfo, err := live.GetInfo()
-	if err != nil {
-		g.Try(ctx, func(ctx context.Context) {
-			//更新用户信息
-			_, e := dao.RoomInfo.Ctx(ctx).Where(dao.RoomInfo.Columns().LiveId, live.GetLiveId()).Update(do.RoomInfo{
-				Anchor:     roomInfo.Anchor,
-				RoomName:   roomInfo.RoomName,
-				ActionTime: gtime.Now(),
-			})
-			if e == nil {
-				global := utils.GetGlobal(ctx)
-				_, ok := global.ModelsMap[live.GetLiveId()]
-				if ok {
-					global.ModelsMap[live.GetLiveId()].RoomInfo.Anchor = roomInfo.Anchor
-					global.ModelsMap[live.GetLiveId()].RoomInfo.RoomName = roomInfo.RoomName
-				}
-			}
-		})
-	}
 }
 
 func (m *manager) Start(ctx context.Context) error {

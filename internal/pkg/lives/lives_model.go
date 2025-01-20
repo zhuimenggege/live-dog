@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"sync"
 
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/shichen437/live-dog/internal/pkg/interfaces"
 )
 
@@ -11,6 +12,7 @@ type GLiveModel struct {
 	Lives           map[int]Live
 	ModelsMap       map[int]*LiveModel
 	CookieMap       map[string]string
+	StartTimeMap    map[int]*gtime.Time
 	EventDispatcher interfaces.Module
 	ListenerManager interfaces.Module
 	RecorderManager interfaces.Module

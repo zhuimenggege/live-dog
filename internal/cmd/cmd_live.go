@@ -15,6 +15,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/gproc"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 func LiveMonitor() error {
@@ -23,6 +24,7 @@ func LiveMonitor() error {
 	models, _ := service.LiveManage().GetLiveModels4Init(ctx)
 	gLiveModel := new(lives.GLiveModel)
 	gLiveModel.Lives = make(map[int]lives.Live)
+	gLiveModel.StartTimeMap = make(map[int]*gtime.Time)
 	gLiveModel.ModelsMap = make(map[int]*lives.LiveModel)
 	for _, m := range models {
 		u, err := m.ParseUrl()

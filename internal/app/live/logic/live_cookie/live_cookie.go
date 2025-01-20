@@ -84,7 +84,7 @@ func (s *sLiveCookie) Update(ctx context.Context, req *v1.PutLiveCookieReq) (res
 			Remark:     req.Remark,
 			ActionTime: gtime.Now(),
 		})
-		utils.WriteErrLogT(ctx, e, consts.AddF)
+		utils.WriteErrLogT(ctx, e, consts.UpdateF)
 	})
 	utils.GetGlobalDefault().CookieMap[req.Platform] = req.Cookie
 	return
