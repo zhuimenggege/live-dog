@@ -6,7 +6,6 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/gtime"
 	v1 "github.com/shichen437/live-dog/api/v1/live"
 	"github.com/shichen437/live-dog/internal/app/common/consts"
@@ -104,31 +103,13 @@ func (s *sLiveHistory) Update(ctx context.Context, req *v1.PutLiveHistoryReq) (r
 	return
 }
 
-func (s *sLiveHistory) DeleteHistory(ctx context.Context, req *v1.DeleteLiveHistoryReq) (res *v1.DeleteLiveHistoryRes, err error) {
+func (s *sLiveHistory) Delete(ctx context.Context, req *v1.DeleteLiveHistoryReq) (res *v1.DeleteLiveHistoryRes, err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		ids := utils.ParamStrToSlice(req.Id, ",")
 		_, e := dao.LiveHistory.Ctx(ctx).WhereIn(dao.LiveHistory.Columns().Id, ids).Delete()
 		utils.WriteErrLogT(ctx, e, consts.DeleteF)
 	})
 	return
-}
-
-func (s *sLiveHistory) AddHistory(liveId int) {
-	if liveId == 0 {
-		return
-	}
-	global := utils.GetGlobalDefault()
-	m, ok := global.StartTimeMap[liveId]
-	if !ok || m == nil {
-		return
-	}
-	endTime := gtime.Now()
-	dao.LiveHistory.Ctx(gctx.New()).Insert(do.LiveHistory{
-		LiveId:    liveId,
-		StartTime: m,
-		EndTime:   endTime,
-		Duration:  fmt.Sprintf("%.2f", endTime.Sub(m).Hours()),
-	})
 }
 
 func validTime(s, e *gtime.Time) error {

@@ -17,8 +17,7 @@ type (
 		Get(ctx context.Context, req *v1.GetLiveHistoryReq) (res *v1.GetLiveHistoryRes, err error)
 		Add(ctx context.Context, req *v1.PostLiveHistoryReq) (res *v1.PostLiveHistoryRes, err error)
 		Update(ctx context.Context, req *v1.PutLiveHistoryReq) (res *v1.PutLiveHistoryRes, err error)
-		DeleteHistory(ctx context.Context, req *v1.DeleteLiveHistoryReq) (res *v1.DeleteLiveHistoryRes, err error)
-		AddHistory(liveId int)
+		Delete(ctx context.Context, req *v1.DeleteLiveHistoryReq) (res *v1.DeleteLiveHistoryRes, err error)
 	}
 )
 

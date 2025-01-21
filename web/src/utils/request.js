@@ -69,7 +69,6 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(res => {
     // 未设置状态码则默认成功状态
     const code = res.data.code || 0;
-    // const code = res.data.code || 200;
     // 获取错误信息
     const msg = errorCode[code] || res.data.msg || errorCode['default']
     // 二进制数据则直接返回
@@ -111,7 +110,12 @@ service.interceptors.response.use(res => {
     } else if (message.includes("timeout")) {
       message = "系统接口请求超时";
     } else if (message.includes("Request failed with status code")) {
-      message = "系统接口" + message.substr(message.length - 3) + "异常";
+      let rCode = message.substr(message.length - 3);
+      if(errorCode[rCode]) {
+        message = errorCode[rCode];
+      } else {
+        message = "系统接口" + rCode + "异常";
+      }
     }
     ElMessage({ message: message, type: 'error', duration: 5 * 1000 })
     return Promise.reject(error)

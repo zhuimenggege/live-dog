@@ -73,84 +73,115 @@ insert into sys_config values(6, '用户登录-黑名单列表',           'sys.
 -- 初始化-菜单权限表
 -- ----------------------------
 INSERT INTO `sys_menu`  VALUES (1, '系统管理', 0, 1, 'system', '', NULL, '', 1, 0, 'M', '0', '0', '', 'system', 'admin', sysdate(), '', NULL, '系统管理目录');
-INSERT INTO `sys_menu`  VALUES (2, '系统监控', 0, 2, 'monitor', '', NULL, '', 1, 0, 'M', '0', '0', '', 'monitor', 'admin', sysdate(), '', NULL, '系统监控目录');
-INSERT INTO `sys_menu`  VALUES (5, '直播管理', 0, 0, 'live', '', '', '', 1, 0, 'M', '0', '0', '', 'druid', 'admin', sysdate(), 'admin', '2024-11-29 15:34:52', '');
+
 INSERT INTO `sys_menu`  VALUES (100, '用户管理', 1, 1, 'user', 'get/system/user/list', 'system/user/index', '', 1, 0, 'C', '0', '0', 'system:user:list', 'user', 'admin', sysdate(), 'admin', null, '用户管理菜单');
 INSERT INTO `sys_menu`  VALUES (101, '角色管理', 1, 2, 'role', 'get/system/role/list', 'system/role/index', '', 1, 0, 'C', '0', '0', 'system:role:list', 'peoples', 'admin', sysdate(), '', NULL, '角色管理菜单');
 INSERT INTO `sys_menu`  VALUES (102, '菜单管理', 1, 3, 'menu', 'get/system/menu/list', 'system/menu/index', '', 1, 0, 'C', '0', '0', 'system:menu:list', 'tree-table', 'admin', sysdate(), '', NULL, '菜单管理菜单');
+INSERT INTO `sys_menu`  VALUES (103, '推送渠道', 1, 4, 'push', 'get/system/push/channel/list', 'system/push/index', '', 1, 0, 'C', '0', '0', 'system:push:list', 'message', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (104, '字典数据', 1, 5, 'dict_data', 'get/system/dict/data/list', 'system/dict/data', '', 1, 0, 'C', '0', '0', 'system:dict:data:list', 'table', 'admin', sysdate(), 'admin', null, '');
 INSERT INTO `sys_menu`  VALUES (105, '字典管理', 1, 6, 'dict_type', 'get/system/dict/type/list', 'system/dict/type', '', 1, 0, 'C', '0', '0', 'system:dict:type:list', 'dict', 'admin', sysdate(), 'admin', null, '字典管理菜单');
 INSERT INTO `sys_menu`  VALUES (106, '参数设置', 1, 7, 'config', 'get/system/config/list', 'system/config/index', '', 1, 0, 'C', '0', '0', 'system:config:list', 'edit', 'admin', sysdate(), '', NULL, '参数设置菜单');
 INSERT INTO `sys_menu`  VALUES (107, '通知公告', 1, 8, 'notice', 'get/system/notice/list', 'system/notice/index', '', 1, 0, 'C', '0', '0', 'system:notice:list', 'message', 'admin', sysdate(), '', NULL, '通知公告菜单');
-INSERT INTO `sys_menu`  VALUES (110, '定时任务', 2, 3, 'job', 'get/monitor/job/list', 'monitor/job/index', '', 1, 0, 'C', '0', '0', 'monitor:job:list', 'job', 'admin', sysdate(), 'admin', null, '定时任务菜单');
-INSERT INTO `sys_menu`  VALUES (112, '服务监控', 2, 5, 'server', 'get/monitor/server/list', 'monitor/server/index', '', 1, 0, 'C', '0', '0', 'monitor:server:list', 'server', 'admin', sysdate(), 'admin', null, '服务监控菜单');
-INSERT INTO `sys_menu`  VALUES (500, '操作日志', 2, 2, 'operlog', 'get/monitor/operlog/list', 'monitor/operlog/index', '', 1, 0, 'C', '0', '0', 'monitor:operlog:list', 'form', 'admin', sysdate(), 'admin', null, '操作日志菜单');
-INSERT INTO `sys_menu`  VALUES (1000, '用户查询', 100, 1, '', 'get/system/user/{userId}', '', '', 1, 0, 'F', '0', '0', 'system:user:query', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (1001, '用户新增', 100, 2, '', 'post/system/user', '', '', 1, 0, 'F', '0', '0', 'system:user:add', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1002, '用户修改', 100, 3, '', 'put/system/user', '', '', 1, 0, 'F', '0', '0', 'system:user:edit', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1003, '用户删除', 100, 4, '', 'delete/system/user/{userId}', '', '', 1, 0, 'F', '0', '0', 'system:user:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1004, '用户导出', 100, 5, '', '', '', '', 1, 0, 'F', '0', '0', 'system:user:export', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1005, '用户导入', 100, 6, '', '', '', '', 1, 0, 'F', '0', '0', 'system:user:import', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1006, '重置密码', 100, 7, '', 'put/system/user/resetPwd', '', '', 1, 0, 'F', '0', '0', 'system:user:resetPwd', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (1007, '角色查询', 101, 1, '', 'get/system/role/{roleId}', '', '', 1, 0, 'F', '0', '0', 'system:role:query', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1008, '角色新增', 101, 2, '', 'post/system/role', '', '', 1, 0, 'F', '0', '0', 'system:role:add', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1009, '角色修改', 101, 3, '', 'put/system/role', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1010, '角色删除', 101, 4, '', 'delete/system/role/{roleId}', '', '', 1, 0, 'F', '0', '0', 'system:role:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1011, '角色导出', 101, 5, '', '', '', '', 1, 0, 'F', '0', '0', 'system:role:export', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1012, '菜单查询', 102, 1, '', 'get/system/menu/{menuId}', '', '', 1, 0, 'F', '0', '0', 'system:menu:query', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1013, '菜单新增', 102, 2, '', 'post/system/menu', '', '', 1, 0, 'F', '0', '0', 'system:menu:add', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1014, '菜单修改', 102, 3, '', 'put/system/menu', '', '', 1, 0, 'F', '0', '0', 'system:menu:edit', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1015, '菜单删除', 102, 4, '', 'delete/system/menu/{menuId}', '', '', 1, 0, 'F', '0', '0', 'system:menu:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1025, '字典查询', 105, 1, '#', 'get/system/dict/type/{dictId}', '', '', 1, 0, 'F', '0', '0', 'system:dict:query', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (1026, '字典新增', 105, 2, '#', 'post/system/dict/type', '', '', 1, 0, 'F', '0', '0', 'system:dict:add', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (1027, '字典修改', 105, 3, '#', 'put/system/dict/type', '', '', 1, 0, 'F', '0', '0', 'system:dict:edit', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (1028, '字典删除', 105, 4, '#', 'delete/system/dict/type/{dictId}', '', '', 1, 0, 'F', '0', '0', 'system:dict:remove', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (1029, '字典导出', 105, 5, '#', '', '', '', 1, 0, 'F', '0', '0', 'system:dict:export', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1030, '参数查询', 106, 1, '#', 'get/system/config/{configId}', '', '', 1, 0, 'F', '0', '0', 'system:config:query', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1031, '参数新增', 106, 2, '#', 'post/system/config', '', '', 1, 0, 'F', '0', '0', 'system:config:add', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1032, '参数修改', 106, 3, '#', 'put/system/config', '', '', 1, 0, 'F', '0', '0', 'system:config:edit', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1033, '参数删除', 106, 4, '#', 'delete/system/config/{configId}', '', '', 1, 0, 'F', '0', '0', 'system:config:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1034, '参数导出', 106, 5, '#', '', '', '', 1, 0, 'F', '0', '0', 'system:config:export', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1035, '公告查询', 107, 1, '#', 'get/system/notice/{noticeId}', '', '', 1, 0, 'F', '0', '0', 'system:notice:query', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1036, '公告新增', 107, 2, '#', 'post/system/notice', '', '', 1, 0, 'F', '0', '0', 'system:notice:add', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1037, '公告修改', 107, 3, '#', 'put/system/notice', '', '', 1, 0, 'F', '0', '0', 'system:notice:edit', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1038, '公告删除', 107, 4, '#', 'delete/system/notice/{noticeId}', '', '', 1, 0, 'F', '0', '0', 'system:notice:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1039, '操作查询', 500, 1, '#', 'get/monitor/operlog/{operlogId}', '', '', 1, 0, 'F', '0', '0', 'monitor:operlog:query', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1040, '操作删除', 500, 2, '#', 'delete/monitor/operlog/{operlogId}', '', '', 1, 0, 'F', '0', '0', 'monitor:operlog:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1041, '日志导出', 500, 3, '#', '', '', '', 1, 0, 'F', '0', '0', 'monitor:operlog:export', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1049, '任务查询', 110, 1, '#', 'get/monitor/job/{jobId}', '', '', 1, 0, 'F', '0', '0', 'monitor:job:query', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1050, '任务新增', 110, 2, '#', 'post/monitor/job', '', '', 1, 0, 'F', '0', '0', 'monitor:job:add', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1051, '任务修改', 110, 3, '#', 'put/monitor/job', '', '', 1, 0, 'F', '0', '0', 'monitor:job:edit', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1052, '任务删除', 110, 4, '#', 'delete/monitor/job/{jobId}', '', '', 1, 0, 'F', '0', '0', 'monitor:job:remove', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1053, '状态修改', 110, 5, '#', '', '', '', 1, 0, 'F', '0', '0', 'monitor:job:changeStatus', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (1054, '任务导出', 110, 6, '#', '', '', '', 1, 0, 'F', '0', '0', 'monitor:job:export', '#', 'admin', sysdate(), '', NULL, '');
-INSERT INTO `sys_menu`  VALUES (2000, '错误', 4, 9, 'index', '', '', '', 1, 0, 'M', '0', '0', '', '404', 'admin', '2023-08-09 14:17:46', 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2001, '字典数据', 1, 5, 'dict_data', 'get/system/dict/data/list', 'system/dict/data', '', 1, 0, 'C', '0', '0', 'system:dict:data:list', 'table', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2003, '分配数据', 101, 6, '', 'put/system/role/dataScope', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2004, '菜单更改状态', 101, 9, '', 'put/system/role/changeStatus', '', '', 1, 0, 'F', '0', '0', 'system:role:changestatus', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2005, '分配用户', 101, 9, '', 'get/system/role/authUser/allocatedList', '', '', 1, 0, 'F', '0', '0', 'system:role:list', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2006, '取消授权', 101, 10, '', 'put/system/role/authUser/cancel', '', '', 1, 0, 'F', '0', '0', 'system:role:eidt', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2007, '批量取消授权', 101, 11, '', 'put/system/role/authUser/cancelAll', '', '', 1, 0, 'F', '0', '0', 'system:role:eidt', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2008, '用户列表', 101, 12, '', 'get/system/role/authUser/unallocatedList', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2009, '添加用户', 101, 13, '', 'put/system/role/authUser/selectAll', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2011, '每日统计', 5, 2, 'daily', 'get/live/daily/list', 'live/daily/index', '', 1, 0, 'C', '0', '0', 'live:daily:list', 'number', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2012, '新增', 2011, 1, '', 'post/live/daily', '', '', 1, 0, 'F', '0', '0', 'live:daily:add', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2013, '删除', 2011, 2, '', 'delete/live/daily', '', '', 1, 0, 'F', '0', '0', 'live:daily:delete', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2014, '房间管理', 5, 1, 'manage', 'get/live/manage/list', 'live/manage/index', '', 1, 0, 'C', '0', '0', 'live:manage:list', 'icon', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2015, '新增', 2014, 1, '', 'post/live/manage', '', '', 1, 0, 'F', '0', '0', 'live:manage:add', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2016, '修改', 2014, 2, '', 'put/live/manage', '', '', 1, 0, 'F', '0', '0', 'live:manage:put', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2017, '删除', 2014, 3, '', 'delete/live/manage', '', '', 1, 0, 'F', '0', '0', 'live:manage:delete', '', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2018, '推送渠道', 1, 4, 'push', 'get/system/push/channel/list', 'system/push/index', '', 1, 0, 'C', '0', '0', 'system:push:list', 'message', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2019, '文件管理', 5, 3, 'file', 'get/file/manage/list', 'live/file/index', '', 1, 0, 'C', '0', '0', 'file:manage:list', 'documentation', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2020, 'Cookie管理', 5, 9, 'cookie', 'get/live/cookie/list', 'live/cookie/index', '', 1, 0, 'C', '0', '0', 'live:cookie:list', 'example', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2021, '个人信息查询', 100, 8, '', 'get/system/user/profile', '', '', 1, 0, 'F', '0', '0', 'system:user:profile', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2022, '个人信息修改', 100, 9, '', 'put/system/user/profile', '', '', 1, 0, 'F', '0', '0', 'system:user:profile', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2023, '个人密码修改', 100, 10, '', 'put/system/user/profile/updatePwd', '', '', 1, 0, 'F', '0', '0', 'system:user:updatePwd', '#', 'admin', sysdate(), 'admin', null, '');
-INSERT INTO `sys_menu`  VALUES (2024, '头像修改', 100, 11, '', 'post/system/user/profile/avatar', '', '', 1, 0, 'F', '0', '0', 'system:user:avatar', '#', 'admin', sysdate(), 'admin', null, '');
+-- 用户管理菜单
+INSERT INTO `sys_menu`  VALUES (10000, '用户查询', 100, 1, '', 'get/system/user/{userId}', '', '', 1, 0, 'F', '0', '0', 'system:user:query', '#', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10001, '用户新增', 100, 2, '', 'post/system/user', '', '', 1, 0, 'F', '0', '0', 'system:user:add', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10002, '用户修改', 100, 3, '', 'put/system/user', '', '', 1, 0, 'F', '0', '0', 'system:user:edit', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10003, '用户删除', 100, 4, '', 'delete/system/user/{userId}', '', '', 1, 0, 'F', '0', '0', 'system:user:remove', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10004, '用户导出', 100, 5, '', '', '', '', 1, 0, 'F', '0', '0', 'system:user:export', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10005, '用户导入', 100, 6, '', '', '', '', 1, 0, 'F', '0', '0', 'system:user:import', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10006, '重置密码', 100, 7, '', 'put/system/user/resetPwd', '', '', 1, 0, 'F', '0', '0', 'system:user:resetPwd', '#', 'admin', sysdate(), 'admin', null, '');
+-- 角色管理菜单
+INSERT INTO `sys_menu`  VALUES (10101, '角色查询', 101, 1, '', 'get/system/role/{roleId}', '', '', 1, 0, 'F', '0', '0', 'system:role:query', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10102, '角色新增', 101, 2, '', 'post/system/role', '', '', 1, 0, 'F', '0', '0', 'system:role:add', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10103, '角色修改', 101, 3, '', 'put/system/role', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10104, '角色删除', 101, 4, '', 'delete/system/role/{roleId}', '', '', 1, 0, 'F', '0', '0', 'system:role:remove', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10105, '角色导出', 101, 5, '', '', '', '', 1, 0, 'F', '0', '0', 'system:role:export', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10106, '分配数据', 101, 6, '', 'put/system/role/dataScope', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10107, '菜单更改状态', 101, 9, '', 'put/system/role/changeStatus', '', '', 1, 0, 'F', '0', '0', 'system:role:changestatus', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10108, '分配用户', 101, 9, '', 'get/system/role/authUser/allocatedList', '', '', 1, 0, 'F', '0', '0', 'system:role:list', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10109, '取消授权', 101, 10, '', 'put/system/role/authUser/cancel', '', '', 1, 0, 'F', '0', '0', 'system:role:eidt', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10110, '批量取消授权', 101, 11, '', 'put/system/role/authUser/cancelAll', '', '', 1, 0, 'F', '0', '0', 'system:role:eidt', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10111, '用户列表', 101, 12, '', 'get/system/role/authUser/unallocatedList', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10112, '添加用户', 101, 13, '', 'put/system/role/authUser/selectAll', '', '', 1, 0, 'F', '0', '0', 'system:role:edit', '', 'admin', sysdate(), 'admin', null, '');
+-- 菜单管理
+INSERT INTO `sys_menu`  VALUES (10201, '菜单查询', 102, 1, '', 'get/system/menu/{menuId}', '', '', 1, 0, 'F', '0', '0', 'system:menu:query', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10202, '菜单新增', 102, 2, '', 'post/system/menu', '', '', 1, 0, 'F', '0', '0', 'system:menu:add', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10203, '菜单修改', 102, 3, '', 'put/system/menu', '', '', 1, 0, 'F', '0', '0', 'system:menu:edit', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10204, '菜单删除', 102, 4, '', 'delete/system/menu/{menuId}', '', '', 1, 0, 'F', '0', '0', 'system:menu:remove', '#', 'admin', sysdate(), '', NULL, '');
+-- 推送渠道
+INSERT INTO `sys_menu`  VALUES (10301, '新增', 103, 1, '', 'post/system/push/channel', '', '', 1, 0, 'F', '0', '0', 'system:push:add', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10302, '修改', 103, 2, '', 'put/system/push/channel', '', '', 1, 0, 'F', '0', '0', 'system:push:update', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10303, '删除', 103, 3, '', 'delete/system/push/channel/{channelId}', '', '', 1, 0, 'F', '0', '0', 'system:push:delete', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10304, '查询', 103, 4, '', 'get/system/push/channel/{channelId}', '', '', 1, 0, 'F', '0', '0', 'system:push:get', '#', 'admin', sysdate(), '', NULL, '');
+-- 字典管理
+INSERT INTO `sys_menu`  VALUES (10501, '字典查询', 105, 1, '#', 'get/system/dict/type/{dictId}', '', '', 1, 0, 'F', '0', '0', 'system:dict:query', '#', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10502, '字典新增', 105, 2, '#', 'post/system/dict/type', '', '', 1, 0, 'F', '0', '0', 'system:dict:add', '#', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10503, '字典修改', 105, 3, '#', 'put/system/dict/type', '', '', 1, 0, 'F', '0', '0', 'system:dict:edit', '#', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10504, '字典删除', 105, 4, '#', 'delete/system/dict/type/{dictId}', '', '', 1, 0, 'F', '0', '0', 'system:dict:remove', '#', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (10505, '字典导出', 105, 5, '#', '', '', '', 1, 0, 'F', '0', '0', 'system:dict:export', '#', 'admin', sysdate(), '', NULL, '');
+-- 参数管理
+INSERT INTO `sys_menu`  VALUES (10601, '参数查询', 106, 1, '#', 'get/system/config/{configId}', '', '', 1, 0, 'F', '0', '0', 'system:config:query', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10602, '参数新增', 106, 2, '#', 'post/system/config', '', '', 1, 0, 'F', '0', '0', 'system:config:add', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10603, '参数修改', 106, 3, '#', 'put/system/config', '', '', 1, 0, 'F', '0', '0', 'system:config:edit', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10604, '参数删除', 106, 4, '#', 'delete/system/config/{configId}', '', '', 1, 0, 'F', '0', '0', 'system:config:remove', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10605, '参数导出', 106, 5, '#', '', '', '', 1, 0, 'F', '0', '0', 'system:config:export', '#', 'admin', sysdate(), '', NULL, '');
+-- 公告管理
+INSERT INTO `sys_menu`  VALUES (10701, '公告查询', 107, 1, '#', 'get/system/notice/{noticeId}', '', '', 1, 0, 'F', '0', '0', 'system:notice:query', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10702, '公告新增', 107, 2, '#', 'post/system/notice', '', '', 1, 0, 'F', '0', '0', 'system:notice:add', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10703, '公告修改', 107, 3, '#', 'put/system/notice', '', '', 1, 0, 'F', '0', '0', 'system:notice:edit', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (10704, '公告删除', 107, 4, '#', 'delete/system/notice/{noticeId}', '', '', 1, 0, 'F', '0', '0', 'system:notice:remove', '#', 'admin', sysdate(), '', NULL, '');
+
+INSERT INTO `sys_menu`  VALUES (2, '系统监控', 0, 2, 'monitor', '', NULL, '', 1, 0, 'M', '0', '0', '', 'monitor', 'admin', sysdate(), '', NULL, '系统监控目录');
+
+INSERT INTO `sys_menu`  VALUES (201, '定时任务', 2, 1, 'job', 'get/monitor/job/list', 'monitor/job/index', '', 1, 0, 'C', '0', '0', 'monitor:job:list', 'job', 'admin', sysdate(), 'admin', null, '定时任务菜单');
+INSERT INTO `sys_menu`  VALUES (202, '服务监控', 2, 2, 'server', 'get/monitor/server/list', 'monitor/server/index', '', 1, 0, 'C', '0', '0', 'monitor:server:list', 'server', 'admin', sysdate(), 'admin', null, '服务监控菜单');
+INSERT INTO `sys_menu`  VALUES (203, '操作日志', 2, 3, 'operlog', 'get/monitor/operlog/list', 'monitor/operlog/index', '', 1, 0, 'C', '0', '0', 'monitor:operlog:list', 'form', 'admin', sysdate(), 'admin', null, '操作日志菜单');
+-- 定时任务
+INSERT INTO `sys_menu`  VALUES (20101, '任务查询', 201, 1, '#', 'get/monitor/job/{jobId}', '', '', 1, 0, 'F', '0', '0', 'monitor:job:query', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20102, '任务新增', 201, 2, '#', 'post/monitor/job', '', '', 1, 0, 'F', '0', '0', 'monitor:job:add', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20103, '任务修改', 201, 3, '#', 'put/monitor/job', '', '', 1, 0, 'F', '0', '0', 'monitor:job:edit', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20104, '任务删除', 201, 4, '#', 'delete/monitor/job/{jobId}', '', '', 1, 0, 'F', '0', '0', 'monitor:job:remove', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20105, '状态修改', 201, 5, '#', '', '', '', 1, 0, 'F', '0', '0', 'monitor:job:changeStatus', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20106, '任务导出', 201, 6, '#', '', '', '', 1, 0, 'F', '0', '0', 'monitor:job:export', '#', 'admin', sysdate(), '', NULL, '');
+-- 操作日志
+INSERT INTO `sys_menu`  VALUES (20301, '操作查询', 203, 1, '#', 'get/monitor/operlog/{operlogId}', '', '', 1, 0, 'F', '0', '0', 'monitor:operlog:query', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20302, '操作删除', 203, 2, '#', 'delete/monitor/operlog/{operlogId}', '', '', 1, 0, 'F', '0', '0', 'monitor:operlog:remove', '#', 'admin', sysdate(), '', NULL, '');
+INSERT INTO `sys_menu`  VALUES (20303, '日志导出', 203, 3, '#', '', '', '', 1, 0, 'F', '0', '0', 'monitor:operlog:export', '#', 'admin', sysdate(), '', NULL, '');
+
+INSERT INTO `sys_menu`  VALUES (3, '直播管理', 0, 0, 'live', '', '', '', 1, 0, 'M', '0', '0', '', 'druid', 'admin', sysdate(), 'admin', '2024-11-29 15:34:52', '');
+
+INSERT INTO `sys_menu`  VALUES (301, '房间管理', 3, 1, 'manage', 'get/live/info/list', 'live/manage/index', '', 1, 0, 'C', '0', '0', 'live:manage:list', 'icon', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (302, '每日统计', 3, 2, 'daily', 'get/live/daily/list', 'live/daily/index', '', 1, 0, 'C', '0', '0', 'live:daily:list', 'number', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (303, '文件管理', 3, 3, 'file', 'get/file/manage/list', 'live/file/index', '', 1, 0, 'C', '0', '0', 'file:manage:list', 'documentation', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (304, '直播历史', 3, 4, 'history', 'get/live/history/list', 'live/history/index', '', 1, 0, 'C', '0', '0', 'live:history:list', 'table', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (305, 'Cookie管理', 3, 5, 'cookie', 'get/live/cookie/list', 'live/cookie/index', '', 1, 0, 'C', '0', '0', 'live:cookie:list', 'example', 'admin', sysdate(), 'admin', null, '');
+-- 房间管理
+INSERT INTO `sys_menu`  VALUES (30101, '新增', 301, 1, '', 'post/live/manage', '', '', 1, 0, 'F', '0', '0', 'live:manage:add', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30102, '修改', 301, 2, '', 'put/live/manage', '', '', 1, 0, 'F', '0', '0', 'live:manage:update', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30103, '删除', 301, 3, '', 'delete/live/manage/{roomId}', '', '', 1, 0, 'F', '0', '0', 'live:manage:delete', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30104, '查询', 301, 4, '', 'get/live/manage/{liveId}', '', '', 1, 0, 'F', '0', '0', 'live:manage:get', '#', 'admin', sysdate(), '', NULL, '');
+-- 每日统计
+INSERT INTO `sys_menu`  VALUES (30201, '新增', 302, 1, '', 'post/live/daily', '', '', 1, 0, 'F', '0', '0', 'live:daily:add', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30202, '修改', 302, 2, '', 'put/live/daily', '', '', 1, 0, 'F', '0', '0', 'live:daily:update', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30203, '删除', 302, 2, '', 'delete/live/daily/{id}', '', '', 1, 0, 'F', '0', '0', 'live:daily:delete', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30204, '查询', 302, 4, '', 'get/live/daily/{id}', '', '', 1, 0, 'F', '0', '0', 'live:daily:get', '#', 'admin', sysdate(), '', NULL, '');
+-- 文件管理
+INSERT INTO `sys_menu`  VALUES (30301, '删除', 303, 1, '', 'delete/live/file', '', '', 1, 0, 'F', '0', '0', 'live:file:delete', '', 'admin', sysdate(), 'admin', null, '');
+-- 直播历史
+INSERT INTO `sys_menu`  VALUES (30401, '新增', 304, 1, '', 'post/live/history', '', '', 1, 0, 'F', '0', '0', 'live:history:add', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30402, '修改', 304, 2, '', 'put/live/history', '', '', 1, 0, 'F', '0', '0', 'live:history:update', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30403, '删除', 304, 3, '', 'delete/live/history/{id}', '', '', 1, 0, 'F', '0', '0', 'live:history:delete', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30404, '查询', 304, 4, '', 'get/live/history/{id}', '', '', 1, 0, 'F', '0', '0', 'live:history:get', '#', 'admin', sysdate(), '', NULL, '');
+-- Cookie管理
+INSERT INTO `sys_menu`  VALUES (30501, '新增', 305, 1, '', 'post/live/cookie', '', '', 1, 0, 'F', '0', '0', 'live:cookie:add', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30502, '修改', 305, 2, '', 'put/live/cookie', '', '', 1, 0, 'F', '0', '0', 'live:cookie:update', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30503, '删除', 305, 3, '', 'delete/live/cookie/{id}', '', '', 1, 0, 'F', '0', '0', 'live:cookie:delete', '', 'admin', sysdate(), 'admin', null, '');
+INSERT INTO `sys_menu`  VALUES (30504, '查询', 305, 4, '', 'get/live/cookie/{id}', '', '', 1, 0, 'F', '0', '0', 'live:cookie:get', '#', 'admin', sysdate(), '', NULL, '');
 
 -- ----------------------------
 -- 初始化-角色和菜单关联表数据
 -- ----------------------------
-INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 2021);
-INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 2022);
-INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 2023);
-INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 2024);
+INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 3);
+INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 301);
+INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 302);
+INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES (2, 304);

@@ -261,7 +261,7 @@ CREATE TABLE `sys_menu` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3000 DEFAULT CHARSET=utf8mb4 COMMENT='菜单权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8mb4 COMMENT='菜单权限表';
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -375,5 +375,18 @@ CREATE TABLE `sys_user_role` (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和角色关联表';
+
+-- ----------------------------
+-- Table structure for live_history
+-- ----------------------------
+DROP TABLE IF EXISTS `live_history`;
+CREATE TABLE `live_history` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `live_id` int(8) NOT NULL COMMENT '直播ID',
+  `start_time` datetime NOT NULL COMMENT '直播开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '直播结束时间',
+  `duration` float DEFAULT NULL COMMENT '直播时长',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COMMENT='直播历史表';
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -33,6 +33,6 @@ func (c *liveHistoryController) Update(ctx context.Context, req *v1.PutLiveHisto
 }
 
 func (c *liveHistoryController) Delete(ctx context.Context, req *v1.DeleteLiveHistoryReq) (res *v1.DeleteLiveHistoryRes, err error) {
-	res, err = service.LiveHistory().DeleteHistory(ctx, req)
+	res, err = service.LiveHistory().Delete(ctx, req)
 	return
 }
