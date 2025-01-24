@@ -7,6 +7,7 @@ import (
 	"time"
 
 	v1 "github.com/shichen437/live-dog/api/v1/admin"
+	"github.com/shichen437/live-dog/internal/app/admin/consts"
 	"github.com/shichen437/live-dog/internal/app/admin/dao"
 	"github.com/shichen437/live-dog/internal/app/admin/model"
 	"github.com/shichen437/live-dog/internal/app/admin/model/do"
@@ -32,28 +33,6 @@ func New() *sSysMenu {
 }
 
 type sSysMenu struct {
-}
-
-//特殊路由
-
-var SpecialApiPath = map[string]bool{
-	//user
-	"get/getInfo":                       true,
-	"get/getRouters":                    true,
-	"get/system/user/authRole/{userId}": true,
-	"get/system/user/profile":           true,
-	"post/logout":                       true,
-	"post/system/user/profile/avatar":   true,
-	"post/user/sign-up":                 true,
-	"put/system/user/profile":           true,
-	"put/system/user/profile/updatePwd": true,
-	//系统工具
-	"get/system/menu/roleMenuTreeselect/{roleId}": true,
-	//菜单
-	"get/system/menu/treeselect": true,
-	//字典
-	"get/system/dict/type":              true,
-	"get/system/dict/type/optionselect": true,
 }
 
 // 根据role_id获取perms
@@ -204,7 +183,7 @@ func (s *sSysMenu) GetPermsUrlByUserId(ctx context.Context, userId int64) (perms
 	for _, menu := range menuList {
 		perms[menu.ApiPath] = true
 	}
-	maps.Copy(perms, SpecialApiPath)
+	maps.Copy(perms, consts.SpecialApiPath)
 	//放入缓存
 	gcache.Set(ctx, commonConst.CacheKeyPermsUrl+strconv.FormatInt(userId, 10), perms, time.Minute*5)
 	return

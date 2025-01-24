@@ -104,9 +104,26 @@ Live Dog 是一个基于 GoFrame 和 RuoYi-Vue3 构建的直播录制工具（�
       <td>abcdefghijklmnopqrstuvwxyz123456 (32位字符串)</td>
       <td>否</td>
     </tr>
+    <tr align="center">
+      <td>TZ</td>
+      <td>时区</td>
+      <td>Asia/Shanghai</td>
+      <td>否</td>
+    </tr>
     </table>
 
 3. 运行
+
+    ```
+    docker run -d --name live-dog --restart=always \
+    -p 9876:9876 \
+    -e DATABASE_DEFAULT_LINK="mysql:root:123456@tcp(127.0.0.1:3306)/db?charset=utf8mb4 \
+    -e PROJECT_SM4KEY="abcdefghijklmnopqrstuvwxyz123456" \
+    -e TZ="Asia/Shanghai" \
+    -v your_video_path:/LiveDog/video \
+    -v your_upload_path:/LiveDog/upload \
+    shichen437/live-dog:latest
+    ```
 
 ## 支持平台
 

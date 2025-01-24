@@ -4,6 +4,7 @@ import (
 	"context"
 
 	v1 "github.com/shichen437/live-dog/api/v1/admin"
+	"github.com/shichen437/live-dog/internal/app/admin/consts"
 	"github.com/shichen437/live-dog/internal/app/admin/dao"
 	"github.com/shichen437/live-dog/internal/app/admin/model"
 	"github.com/shichen437/live-dog/internal/app/admin/model/do"
@@ -30,6 +31,12 @@ type sPushChannel struct {
 
 func (s *sPushChannel) Add(ctx context.Context, req *v1.PostPushChannelReq) (res *v1.PostPushChannelRes, err error) {
 	adminName := gconv.String(ctx.Value(commonConst.CtxAdminName))
+	if req.Type == "" || !utils.InSliceString(req.Type, &consts.PushChannelType) {
+		return
+	}
+	if req.Type == "email" && req.Email == nil {
+		return
+	}
 	err = g.Try(ctx, func(ctx context.Context) {
 		//添加角色信息
 		lastInfo, err := dao.PushChannel.Ctx(ctx).Insert(do.PushChannel{
@@ -43,16 +50,19 @@ func (s *sPushChannel) Add(ctx context.Context, req *v1.PostPushChannelReq) (res
 		})
 		utils.WriteErrLogT(ctx, err, commonConst.AddF)
 		lastId, err := lastInfo.LastInsertId()
-		dao.PushChannelEmail.Ctx(ctx).Insert(do.PushChannelEmail{
-			ChannelId:  lastId,
-			Server:     req.Email.Server,
-			Port:       req.Email.Port,
-			From:       req.Email.From,
-			To:         req.Email.To,
-			AuthCode:   req.Email.AuthCode,
-			CreateTime: gtime.Now(),
-		})
-		utils.WriteErrLogT(ctx, err, commonConst.AddF)
+		if req.Type == "email" {
+			dao.PushChannelEmail.Ctx(ctx).Insert(do.PushChannelEmail{
+				ChannelId:  lastId,
+				Server:     req.Email.Server,
+				Port:       req.Email.Port,
+				From:       req.Email.From,
+				To:         req.Email.To,
+				AuthCode:   req.Email.AuthCode,
+				CreateTime: gtime.Now(),
+			})
+			utils.WriteErrLogT(ctx, err, commonConst.AddF)
+		}
+
 	})
 	return
 }
@@ -73,6 +83,14 @@ func (s *sPushChannel) Update(ctx context.Context, req *v1.PutPushChannelReq) (r
 		err = utils.TError(ctx, commonConst.IDEmpty)
 		return
 	}
+	var source *entity.PushChannel
+	err = g.Try(ctx, func(ctx context.Context) {
+		dao.PushChannel.Ctx(ctx).WherePri(req.Id).Scan(&source)
+	})
+	if err != nil || source == nil || source.Type != req.Type {
+		err = utils.TError(ctx, commonConst.UpdateF)
+		return
+	}
 	g.Try(ctx, func(ctx context.Context) {
 		_, e := dao.PushChannel.Ctx(ctx).WherePri(&req.Id).Update(do.PushChannel{
 			Name:       req.Name,
@@ -84,23 +102,31 @@ func (s *sPushChannel) Update(ctx context.Context, req *v1.PutPushChannelReq) (r
 		})
 		utils.WriteErrLogT(ctx, e, commonConst.UpdateF)
 	})
-	err = g.Try(ctx, func(ctx context.Context) {
-		_, e := dao.PushChannelEmail.Ctx(ctx).Where(dao.PushChannelEmail.Columns().ChannelId, &req.Id).Update(do.PushChannelEmail{
-			Server:     req.Email.Server,
-			Port:       req.Email.Port,
-			AuthCode:   req.Email.AuthCode,
-			From:       req.Email.From,
-			To:         req.Email.To,
-			ActionTime: gtime.Now(),
+	if source.Type == "email" {
+		err = g.Try(ctx, func(ctx context.Context) {
+			_, e := dao.PushChannelEmail.Ctx(ctx).Where(dao.PushChannelEmail.Columns().ChannelId, &req.Id).Update(do.PushChannelEmail{
+				Server:     req.Email.Server,
+				Port:       req.Email.Port,
+				AuthCode:   req.Email.AuthCode,
+				From:       req.Email.From,
+				To:         req.Email.To,
+				ActionTime: gtime.Now(),
+			})
+			utils.WriteErrLogT(ctx, e, commonConst.UpdateF)
 		})
-		utils.WriteErrLogT(ctx, e, commonConst.UpdateF)
-	})
+	}
 	return
 }
 
 func (s *sPushChannel) List(ctx context.Context, req *v1.GetPushChannelListReq) (res *v1.GetPushChannelListRes, err error) {
 	res = &v1.GetPushChannelListRes{}
 	m := dao.PushChannel.Ctx(ctx)
+	if req.Type != "" {
+		m = m.Where(dao.PushChannel.Columns().Type, req.Type)
+	}
+	if req.Name != "" {
+		m = m.WhereLike(dao.PushChannel.Columns().Name, "%" + req.Name + "%")
+	}
 	err = g.Try(ctx, func(ctx context.Context) {
 		var result []*entity.PushChannel
 		res.Total, err = m.Count()

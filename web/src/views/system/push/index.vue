@@ -32,8 +32,14 @@
       <el-table-column label="数据编号" align="center" prop="id" width="120" />
       <el-table-column label="渠道名称" align="center" prop="name" :show-overflow-tooltip="true" width="200" />
       <el-table-column label="渠道类型" align="center" prop="type" :show-overflow-tooltip="true" width="200" />
-      <el-table-column label="状态" align="center" prop="status" :show-overflow-tooltip="true" width="100" />
-      <el-table-column label="节目备注" align="center" prop="remark" :show-overflow-tooltip="true" width="300" />
+      <el-table-column label="状态" align="center" prop="status" :show-overflow-tooltip="true" width="100" >
+        <template #default="scope">
+          <el-tag v-if="scope.row.status === 1">启用</el-tag>
+          <el-tag v-else-if="scope.row.status === 0" type="danger">禁用</el-tag>
+          <el-tag v-else type="info">未知</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" width="300" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-tooltip content="修改" placement="top" v-if="scope.row.roleId !== 1">
@@ -51,35 +57,17 @@
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
       v-model:limit="queryParams.pageSize" @pagination="getList" />
 
-    <!-- 添加或修改角色配置对话框 -->
+    <!-- 添加或修改对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+      <el-tabs v-model="activeTab" type="border-card">
+        <el-tab-pane label="Email" name="email" :disabled="isEditing && activeTab !== 'email'">
+          <EmailForm ref="emailRef" :form="form" :rules="rules" />
+        </el-tab-pane>
+        <el-tab-pane label="Webhook" name="webhook" :disabled="isEditing && activeTab !== 'webhook'">
+          <WebhookForm ref="webhookRef" :form="form" :rules="rules" />
+        </el-tab-pane>
+      </el-tabs>
 
-      <el-form ref="emailRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="发送邮箱" prop="email.from">
-          <el-input v-model="form.email.from" placeholder="请输入发送邮箱" />
-        </el-form-item>
-        <el-form-item label="接收邮箱" prop="email.to">
-          <el-input v-model="form.email.to" placeholder="请输入接收邮箱" />
-        </el-form-item>
-        <el-form-item label="smtp服务器" prop="email.server">
-          <el-input v-model="form.email.server" placeholder="请输入smtp服务器" />
-        </el-form-item>
-        <el-form-item label="smtp端口" prop="email.port">
-          <el-input v-model="form.email.port" placeholder="请输入smtp端口" />
-        </el-form-item>
-        <el-form-item label="授权码" prop="email.authCode">
-          <el-input v-model="form.email.authCode" placeholder="请输入授权码" />
-        </el-form-item>
-        <el-form-item label="是否启用" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio-button label="0">禁用</el-radio-button>
-            <el-radio-button label="1">启用</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注内容" />
-        </el-form-item>
-      </el-form>
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -90,7 +78,7 @@
   </div>
 </template>
 
-<script setup name="Live">
+<script setup name="Push">
 import {
   listChannel,
   getChannel,
@@ -98,6 +86,8 @@ import {
   updateChannel,
   delChannel
 } from "@/api/system/push";
+import EmailForm from '@/views/system/push/components/EmailForm.vue';
+import WebhookForm from '@/views/system/push/components/WebhookForm.vue';
 
 const { proxy } = getCurrentInstance();
 
@@ -111,12 +101,13 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const dateRange = ref([]);
+const isEditing = ref(false);
 const typeOptions = [
   {
     value: 'email',
     label: '邮箱'
   }, {
-    value: 'Webhook',
+    value: 'webhook',
     label: 'Webhook'
   }];
 
@@ -129,13 +120,15 @@ const data = reactive({
     type: undefined,
   },
   rules: {
-    email: [{ required: true, message: "角色名称不能为空", trigger: "blur" }],
-  },
+
+  }
 });
 
 const { queryParams, form, rules } = toRefs(data);
 
-/** 查询每日统计列表 */
+const activeTab = ref('email');
+
+/** 查询推送渠道列表 */
 function getList() {
   loading.value = true;
   listChannel(proxy.addDateRange(queryParams.value, dateRange.value)).then(
@@ -151,21 +144,22 @@ function getList() {
 function reset() {
   form.value = {
     id: undefined,
-    name: '邮箱',
-    type: 'email',
-    status: 1,
+    name: undefined,
+    type: "",
+    status: 0,
     remark: "",
+    url: "",
     email: {
       id: undefined,
       channelId: undefined,
       from: "",
       to: "",
       server: "",
-      port: "",
+      port: 25,
       authCode: "",
     }
   };
-  proxy.resetForm("emailRef");
+  proxy.resetForm("formRef");
 }
 /** 添加记录 */
 function handleAdd() {
@@ -179,35 +173,69 @@ function handleUpdate(row) {
   const id = row.id;
   getChannel(id).then(response => {
     form.value = response.data;
+    // 确保 email 属性被正确初始化
+    if (!form.value.email) {
+      form.value.email = {
+        from: '',
+        to: '',
+        server: '',
+        port: 25,
+        authCode: ''
+      };
+    }
     open.value = true;
     title.value = "修改推送渠道";
+    isEditing.value = true; // 设置为编辑模式
+    activeTab.value = form.value.type || 'email';
   });
 }
 
+const emailRef = ref(null);
+const webhookRef = ref(null);
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["emailRef"].validate((valid) => {
-    if (valid) {
-      if (form.value.id != undefined) {
-        updateChannel(form.value).then((response) => {
-          proxy.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
-      } else {
-        addChannel(form.value).then((response) => {
-          proxy.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+  const formRef = {
+    'email': emailRef,
+    'webhook': webhookRef
+  }[activeTab.value];
+
+  if (formRef) {
+    formRef.value.validate((valid) => {
+      if (valid) {
+        form.value.type = activeTab.value;
+        if (form.value.id != undefined) {
+          updateChannel(form.value).then((response) => {
+            proxy.$modal.msgSuccess("修改成功");
+            open.value = false;
+            getList();
+            resetTab(); // 重置选项卡
+          });
+        } else {
+          addChannel(form.value).then((response) => {
+            proxy.$modal.msgSuccess("新增成功");
+            open.value = false;
+            getList();
+            resetTab(); // 重置选项卡
+          });
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.error('formRef is undefined');
+  }
 }
 /** 取消按钮 */
 function cancel() {
   open.value = false;
   reset();
+  nextTick(() => {
+    resetTab();
+  });
+}
+
+function resetTab() {
+  activeTab.value = 'email'; // 重置为默认选项卡
+  isEditing.value = false; // 退出编辑模式
 }
 
 /** 搜索按钮操作 */

@@ -93,9 +93,26 @@ Live-Dog is a live broadcast recording tool built on GoFrame and RuoYi-Vue3 (cur
       <td>abcdefghijklmnopqrstuvwxyz123456 (32-length string)</td>
       <td>No</td>
     </tr>
+    <tr align="center">
+      <td>TZ</td>
+      <td>Time zone</td>
+      <td>Asia/Shanghai</td>
+      <td>No</td>
+    </tr>
     </table>
 
 3. Run
+
+    ```
+    docker run -d --name live-dog --restart=always \
+    -p 9876:9876 \
+    -e DATABASE_DEFAULT_LINK="mysql:root:123456@tcp(127.0.0.1:3306)/db?charset=utf8mb4 \
+    -e PROJECT_SM4KEY="abcdefghijklmnopqrstuvwxyz123456" \
+    -e TZ="Asia/Shanghai" \
+    -v your_video_path:/LiveDog/video \
+    -v your_upload_path:/LiveDog/upload \
+    shichen437/live-dog:latest
+    ```
 
 ## Supported platforms
 
