@@ -43,7 +43,6 @@ func (s *sPushChannel) Add(ctx context.Context, req *v1.PostPushChannelReq) (res
 			Name:       req.Name,
 			Type:       req.Type,
 			Status:     req.Status,
-			Url:        req.Url,
 			Remark:     req.Remark,
 			CreateBy:   adminName,
 			CreateTime: gtime.Now(),
@@ -61,6 +60,20 @@ func (s *sPushChannel) Add(ctx context.Context, req *v1.PostPushChannelReq) (res
 				CreateTime: gtime.Now(),
 			})
 			utils.WriteErrLogT(ctx, err, commonConst.AddF)
+		} else {
+			dao.PushChannelWeb.Ctx(ctx).Insert(do.PushChannelWeb{
+				ChannelId:    lastId,
+				Url:          req.Web.Url,
+				HttpMethod:   req.Web.HttpMethod,
+				Secret:       req.Web.Secret,
+				AppId:        req.Web.AppId,
+				CorpId:       req.Web.CorpId,
+				ReceiverId:   req.Web.ReceiverId,
+				ReceiverType: req.Web.ReceiverType,
+				ExtraParams:  req.Web.ExtraParams,
+				CreateTime:   gtime.Now(),
+			})
+			utils.WriteErrLogT(ctx, err, commonConst.AddF)
 		}
 
 	})
@@ -73,6 +86,8 @@ func (s *sPushChannel) Delete(ctx context.Context, req *v1.DeletePushChannelReq)
 		_, e := dao.PushChannel.Ctx(ctx).WhereIn(dao.PushChannel.Columns().Id, ids).Delete()
 		utils.WriteErrLogT(ctx, e, commonConst.DeleteF)
 		_, e = dao.PushChannelEmail.Ctx(ctx).WhereIn(dao.PushChannelEmail.Columns().ChannelId, ids).Delete()
+		utils.WriteErrLogT(ctx, e, commonConst.DeleteF)
+		_, e = dao.PushChannelWeb.Ctx(ctx).WhereIn(dao.PushChannelWeb.Columns().ChannelId, ids).Delete()
 		utils.WriteErrLogT(ctx, e, commonConst.DeleteF)
 	})
 	return
@@ -95,7 +110,6 @@ func (s *sPushChannel) Update(ctx context.Context, req *v1.PutPushChannelReq) (r
 		_, e := dao.PushChannel.Ctx(ctx).WherePri(&req.Id).Update(do.PushChannel{
 			Name:       req.Name,
 			Type:       req.Type,
-			Url:        req.Url,
 			Status:     req.Status,
 			Remark:     req.Remark,
 			ActionTime: gtime.Now(),
@@ -114,6 +128,21 @@ func (s *sPushChannel) Update(ctx context.Context, req *v1.PutPushChannelReq) (r
 			})
 			utils.WriteErrLogT(ctx, e, commonConst.UpdateF)
 		})
+	} else {
+		err = g.Try(ctx, func(ctx context.Context) {
+			_, e := dao.PushChannelWeb.Ctx(ctx).Where(dao.PushChannelWeb.Columns().ChannelId, &req.Id).Update(do.PushChannelWeb{
+				Url:          req.Web.Url,
+				HttpMethod:   req.Web.HttpMethod,
+				Secret:       req.Web.Secret,
+				AppId:        req.Web.AppId,
+				CorpId:       req.Web.CorpId,
+				ReceiverId:   req.Web.ReceiverId,
+				ReceiverType: req.Web.ReceiverType,
+				ExtraParams:  req.Web.ExtraParams,
+				ActionTime:   gtime.Now(),
+			})
+			utils.WriteErrLogT(ctx, e, commonConst.UpdateF)
+		})
 	}
 	return
 }
@@ -125,7 +154,7 @@ func (s *sPushChannel) List(ctx context.Context, req *v1.GetPushChannelListReq) 
 		m = m.Where(dao.PushChannel.Columns().Type, req.Type)
 	}
 	if req.Name != "" {
-		m = m.WhereLike(dao.PushChannel.Columns().Name, "%" + req.Name + "%")
+		m = m.WhereLike(dao.PushChannel.Columns().Name, "%"+req.Name+"%")
 	}
 	err = g.Try(ctx, func(ctx context.Context) {
 		var result []*entity.PushChannel
@@ -148,6 +177,11 @@ func (s *sPushChannel) Get(ctx context.Context, req *v1.GetPushChannelReq) (res 
 		err = dao.PushChannelEmail.Ctx(ctx).Where(dao.PushChannelEmail.Columns().ChannelId, req.Id).Scan(&email)
 		utils.WriteErrLogT(ctx, err, commonConst.GetF)
 		res.Email = email
+	} else {
+		web := &entity.PushChannelWeb{}
+		err = dao.PushChannelWeb.Ctx(ctx).Where(dao.PushChannelWeb.Columns().ChannelId, req.Id).Scan(&web)
+		utils.WriteErrLogT(ctx, err, commonConst.GetF)
+		res.Web = web
 	}
 	return
 }
@@ -173,6 +207,12 @@ func (s *sPushChannel) ListAll(ctx context.Context) (res []*model.PushChannel, e
 	utils.WriteErrLogT(ctx, err, commonConst.ListF)
 	for _, v := range emails {
 		cMap[v.ChannelId].Email = v
+	}
+	webs := []*entity.PushChannelWeb{}
+	err = dao.PushChannelWeb.Ctx(ctx).WhereIn(dao.PushChannelWeb.Columns().ChannelId, arr).Scan(&webs)
+	utils.WriteErrLogT(ctx, err, commonConst.ListF)
+	for _, v := range webs {
+		cMap[v.ChannelId].Web = v
 	}
 	return
 }

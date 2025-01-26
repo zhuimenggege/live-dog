@@ -63,8 +63,8 @@
         <el-tab-pane label="Email" name="email" :disabled="isEditing && activeTab !== 'email'">
           <EmailForm ref="emailRef" :form="form" :rules="rules" />
         </el-tab-pane>
-        <el-tab-pane label="Webhook" name="webhook" :disabled="isEditing && activeTab !== 'webhook'">
-          <WebhookForm ref="webhookRef" :form="form" :rules="rules" />
+        <el-tab-pane label="Gotify" name="gotify" :disabled="isEditing && activeTab !== 'gotify'">
+          <GotifyForm ref="gotifyRef" :form="form" :rules="rules" />
         </el-tab-pane>
       </el-tabs>
 
@@ -87,7 +87,7 @@ import {
   delChannel
 } from "@/api/system/push";
 import EmailForm from '@/views/system/push/components/EmailForm.vue';
-import WebhookForm from '@/views/system/push/components/WebhookForm.vue';
+import GotifyForm from '@/views/system/push/components/GotifyForm.vue';
 
 const { proxy } = getCurrentInstance();
 
@@ -107,8 +107,8 @@ const typeOptions = [
     value: 'email',
     label: '邮箱'
   }, {
-    value: 'webhook',
-    label: 'Webhook'
+    value: 'gotify',
+    label: 'Gotify'
   }];
 
 const data = reactive({
@@ -144,20 +144,11 @@ function getList() {
 function reset() {
   form.value = {
     id: undefined,
-    name: undefined,
-    type: "",
     status: 0,
-    remark: "",
-    url: "",
     email: {
-      id: undefined,
-      channelId: undefined,
-      from: "",
-      to: "",
-      server: "",
       port: 25,
-      authCode: "",
-    }
+    },
+    web: {}
   };
   proxy.resetForm("formRef");
 }
@@ -176,12 +167,11 @@ function handleUpdate(row) {
     // 确保 email 属性被正确初始化
     if (!form.value.email) {
       form.value.email = {
-        from: '',
-        to: '',
-        server: '',
         port: 25,
-        authCode: ''
       };
+    }
+    if (!form.value.web) {
+      form.value.web = {};
     }
     open.value = true;
     title.value = "修改推送渠道";
@@ -191,12 +181,12 @@ function handleUpdate(row) {
 }
 
 const emailRef = ref(null);
-const webhookRef = ref(null);
+const gotifyRef = ref(null);
 /** 提交按钮 */
 function submitForm() {
   const formRef = {
     'email': emailRef,
-    'webhook': webhookRef
+    'gotify': gotifyRef
   }[activeTab.value];
 
   if (formRef) {

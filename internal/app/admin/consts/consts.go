@@ -6,7 +6,6 @@ const (
 
 	SysDictTypeStatusOk = "0"
 	SysDictTypeStatusNo = "1"
-
 )
 
-var PushChannelType = []string{"email", "webhook"}
+var PushChannelType = []string{"email", "gotify", "webhook", "bark"}

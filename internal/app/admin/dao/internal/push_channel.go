@@ -24,7 +24,6 @@ type PushChannelColumns struct {
 	Name       string // 渠道名称
 	Type       string // 渠道类型
 	Status     string // 状态：0 禁用 1 启用
-	Url        string // webhook
 	Remark     string // 备注
 	CreateBy   string // 创建人
 	CreateTime string // 创建时间
@@ -37,7 +36,6 @@ var pushChannelColumns = PushChannelColumns{
 	Name:       "name",
 	Type:       "type",
 	Status:     "status",
-	Url:        "url",
 	Remark:     "remark",
 	CreateBy:   "create_by",
 	CreateTime: "create_time",

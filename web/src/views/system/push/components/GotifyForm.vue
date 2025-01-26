@@ -3,8 +3,8 @@
     <el-form-item label="渠道名称" prop="name">
       <el-input v-model="form.name" placeholder="请输入渠道名称" />
     </el-form-item>
-    <el-form-item label="URL" prop="url">
-      <el-input type="textarea" v-model="form.url" placeholder="请输入Webhook URL" />
+    <el-form-item label="URL" prop="web.url">
+      <el-input type="textarea" v-model="form.web.url" placeholder="请输入 Gotify URL" />
     </el-form-item>
     <el-form-item label="状态" prop="status">
       <el-radio-group v-model="form.status">
@@ -46,8 +46,8 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  url: [
-    { required: true, message: '请输入Webhook URL', trigger: 'blur' },
+  'web.url': [
+    { required: true, message: '请输入 Gotify URL', trigger: 'blur' },
     {
       pattern: /^https?:\/\/[-A-Za-z0-9+&@#\/%?=~_|!:,.;]+[-A-Za-z0-9+&@#\/%=~_|]/,
       message: '请输入正确的 URL',

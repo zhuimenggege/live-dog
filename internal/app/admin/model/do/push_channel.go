@@ -16,7 +16,6 @@ type PushChannel struct {
 	Name       interface{} // 渠道名称
 	Type       interface{} // 渠道类型
 	Status     interface{} // 状态：0 禁用 1 启用
-	Url        interface{} // webhook
 	Remark     interface{} // 备注
 	CreateBy   interface{} // 创建人
 	CreateTime *gtime.Time // 创建时间
