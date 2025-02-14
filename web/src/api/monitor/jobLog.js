@@ -16,11 +16,3 @@ export function delJobLog(jobLogId) {
     method: 'delete'
   })
 }
-
-// 清空调度日志
-export function cleanJobLog() {
-  return request({
-    url: '/monitor/jobLog/clean',
-    method: 'delete'
-  })
-}

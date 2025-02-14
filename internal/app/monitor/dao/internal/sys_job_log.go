@@ -21,8 +21,8 @@ type SysJobLogDao struct {
 // SysJobLogColumns defines and stores column names for table sys_job_log.
 type SysJobLogColumns struct {
 	JobLogId      string // 任务日志ID
+	JobId         string // 对应任务 ID
 	JobName       string // 任务名称
-	JobGroup      string // 任务组名
 	InvokeTarget  string // 调用目标字符串
 	JobMessage    string // 日志信息
 	Status        string // 执行状态（0正常 1失败）
@@ -33,8 +33,8 @@ type SysJobLogColumns struct {
 // sysJobLogColumns holds the columns for table sys_job_log.
 var sysJobLogColumns = SysJobLogColumns{
 	JobLogId:      "job_log_id",
+	JobId:         "job_id",
 	JobName:       "job_name",
-	JobGroup:      "job_group",
 	InvokeTarget:  "invoke_target",
 	JobMessage:    "job_message",
 	Status:        "status",

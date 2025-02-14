@@ -10,13 +10,17 @@ type SystemDictData struct {
 // 默认字典类型
 var (
 	AssistLivePlatform = "sys_internal_assist_live_platform"
-	internalDictType   = []string{AssistLivePlatform}
-	m                  = make(map[string]([]SystemDictData), 1)
+	JobInvoke          = "sys_internal_job_invoke"
+	internalDictType   = []string{AssistLivePlatform, JobInvoke}
+	m                  = make(map[string]([]SystemDictData), 2)
 )
 
 func init() {
 	addDictData(AssistLivePlatform, []SystemDictData{
 		{DictType: AssistLivePlatform, DictLabel: "抖音", DictValue: "douyin", DictSort: 1},
+	})
+	addDictData(JobInvoke, []SystemDictData{
+		{DictType: JobInvoke, DictLabel: "空间预警", DictValue: "storageWarning", DictSort: 1},
 	})
 }
 

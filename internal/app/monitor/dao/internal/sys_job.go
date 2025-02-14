@@ -22,12 +22,13 @@ type SysJobDao struct {
 type SysJobColumns struct {
 	JobId          string // 任务ID
 	JobName        string // 任务名称
-	JobGroup       string // 任务组名
 	InvokeTarget   string // 调用目标字符串
 	CronExpression string // cron执行表达式
 	MisfirePolicy  string // 计划执行错误策略（1立即执行 2执行一次 3放弃执行）
 	Concurrent     string // 是否并发执行（0允许 1禁止）
 	Status         string // 状态（0正常 1暂停）
+	Type           string // 任务类型：0 系统
+	JobParams      string // 自定义任务参数
 	CreateBy       string // 创建者
 	CreateTime     string // 创建时间
 	UpdateBy       string // 更新者
@@ -39,12 +40,13 @@ type SysJobColumns struct {
 var sysJobColumns = SysJobColumns{
 	JobId:          "job_id",
 	JobName:        "job_name",
-	JobGroup:       "job_group",
 	InvokeTarget:   "invoke_target",
 	CronExpression: "cron_expression",
 	MisfirePolicy:  "misfire_policy",
 	Concurrent:     "concurrent",
 	Status:         "status",
+	Type:           "type",
+	JobParams:      "job_params",
 	CreateBy:       "create_by",
 	CreateTime:     "create_time",
 	UpdateBy:       "update_by",

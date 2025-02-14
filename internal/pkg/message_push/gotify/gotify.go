@@ -30,14 +30,19 @@ type MessagePush struct {
 	LiveId int
 }
 
-func (mp *MessagePush) Push(ctx context.Context, channel *model.PushChannel) (err error) {
+func (p *MessagePush) Push(ctx context.Context, channel *model.PushChannel) (err error) {
 	global := utils.GetGlobal(gctx.GetInitCtx())
-	lm := global.ModelsMap[mp.LiveId]
+	lm := global.ModelsMap[p.LiveId]
 	if lm.LiveManage.EnableNotice != 1 {
 		return
 	}
 	gotify(channel.Web.Url, "开播通知", "你关注的主播["+lm.RoomInfo.Anchor+"]开播了！")
 	return nil
+}
+
+func (p *MessagePush) CustomPush(ctx context.Context, channel *model.PushChannel, model *mp.MessageModel) (err error){
+	gotify(channel.Web.Url, model.Title, model.Content)
+	return
 }
 
 func gotify(url string, title, message string) {

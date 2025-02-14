@@ -67,6 +67,7 @@ var (
 				})
 			})
 			LiveMonitor()
+			JobInit()
 			// Just run the server.
 			s.Run()
 			return nil

@@ -13,8 +13,8 @@ import (
 type SysJobLog struct {
 	g.Meta        `orm:"table:sys_job_log, do:true"`
 	JobLogId      interface{} // 任务日志ID
+	JobId         interface{} // 对应任务 ID
 	JobName       interface{} // 任务名称
-	JobGroup      interface{} // 任务组名
 	InvokeTarget  interface{} // 调用目标字符串
 	JobMessage    interface{} // 日志信息
 	Status        interface{} // 执行状态（0正常 1失败）

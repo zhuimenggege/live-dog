@@ -10,21 +10,6 @@
                @keyup.enter="handleQuery"
             />
          </el-form-item>
-         <el-form-item label="任务组名" prop="jobGroup">
-            <el-select
-               v-model="queryParams.jobGroup"
-               placeholder="请选择任务组名"
-               clearable
-               style="width: 240px"
-            >
-               <el-option
-                  v-for="dict in sys_job_group"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-               />
-            </el-select>
-         </el-form-item>
          <el-form-item label="执行状态" prop="status">
             <el-select
                v-model="queryParams.status"
@@ -64,26 +49,8 @@
                icon="Delete"
                :disabled="multiple"
                @click="handleDelete"
-               v-hasPermi="['monitor:job:remove']"
+               v-hasPermi="['monitor:jobLog:remove']"
             >删除</el-button>
-         </el-col>
-         <el-col :span="1.5">
-            <el-button
-               type="danger"
-               plain
-               icon="Delete"
-               @click="handleClean"
-               v-hasPermi="['monitor:job:remove']"
-            >清空</el-button>
-         </el-col>
-         <el-col :span="1.5">
-            <el-button
-               type="warning"
-               plain
-               icon="Download"
-               @click="handleExport"
-               v-hasPermi="['monitor:job:export']"
-            >导出</el-button>
          </el-col>
          <el-col :span="1.5">
             <el-button 
@@ -100,13 +67,8 @@
          <el-table-column type="selection" width="55" align="center" />
          <el-table-column label="日志编号" width="80" align="center" prop="jobLogId" />
          <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" />
-         <el-table-column label="任务组名" align="center" prop="jobGroup" :show-overflow-tooltip="true">
-            <template #default="scope">
-               <dict-tag :options="sys_job_group" :value="scope.row.jobGroup" />
-            </template>
-         </el-table-column>
-         <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
          <el-table-column label="日志信息" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
+         <el-table-column label="异常信息" align="center" prop="exceptionInfo" :show-overflow-tooltip="true" />
          <el-table-column label="执行状态" align="center" prop="status">
             <template #default="scope">
                <dict-tag :options="sys_common_status" :value="scope.row.status" />
@@ -115,11 +77,6 @@
          <el-table-column label="执行时间" align="center" prop="createTime" width="180">
             <template #default="scope">
                <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-         </el-table-column>
-         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-            <template #default="scope">
-               <el-button link type="primary" icon="View" @click="handleView(scope.row)" v-hasPermi="['monitor:job:query']">详细</el-button>
             </template>
          </el-table-column>
       </el-table>
@@ -138,16 +95,14 @@
             <el-row>
                <el-col :span="12">
                   <el-form-item label="日志序号：">{{ form.jobLogId }}</el-form-item>
+               </el-col>
+               <el-col :span="12">
                   <el-form-item label="任务名称：">{{ form.jobName }}</el-form-item>
                </el-col>
                <el-col :span="12">
-                  <el-form-item label="任务分组：">{{ form.jobGroup }}</el-form-item>
                   <el-form-item label="执行时间：">{{ form.createTime }}</el-form-item>
                </el-col>
-               <el-col :span="24">
-                  <el-form-item label="调用方法：">{{ form.invokeTarget }}</el-form-item>
-               </el-col>
-               <el-col :span="24">
+               <el-col :span="12">
                   <el-form-item label="日志信息：">{{ form.jobMessage }}</el-form-item>
                </el-col>
                <el-col :span="24">
@@ -171,11 +126,10 @@
 </template>
 
 <script setup name="JobLog">
-import { getJob } from "@/api/monitor/job";
-import { listJobLog, delJobLog, cleanJobLog } from "@/api/monitor/jobLog";
+import { listJobLog, delJobLog } from "@/api/monitor/jobLog";
 
 const { proxy } = getCurrentInstance();
-const { sys_common_status, sys_job_group } = proxy.useDict("sys_common_status", "sys_job_group");
+const { sys_common_status } = proxy.useDict("sys_common_status");
 
 const jobLogList = ref([]);
 const open = ref(false);
@@ -192,20 +146,20 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    dictName: undefined,
-    dictType: undefined,
-    status: undefined
+    jobId: undefined,
+    status: undefined,
+    jobName: undefined
   }
 });
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form } = toRefs(data);
 
 /** 查询调度日志列表 */
 function getList() {
   loading.value = true;
   listJobLog(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
-    jobLogList.value = response.rows;
-    total.value = response.total;
+    jobLogList.value = response.data.rows;
+    total.value = response.data.total;
     loading.value = false;
   });
 }
@@ -230,13 +184,8 @@ function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.jobLogId);
   multiple.value = !selection.length;
 }
-/** 详细按钮操作 */
-function handleView(row) {
-  open.value = true;
-  form.value = row;
-}
 /** 删除按钮操作 */
-function handleDelete(row) {
+function handleDelete() {
   proxy.$modal.confirm('是否确认删除调度日志编号为"' + ids.value + '"的数据项?').then(function () {
     return delJobLog(ids.value);
   }).then(() => {
@@ -244,33 +193,10 @@ function handleDelete(row) {
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
 }
-/** 清空按钮操作 */
-function handleClean() {
-  proxy.$modal.confirm("是否确认清空所有调度日志数据项?").then(function () {
-    return cleanJobLog();
-  }).then(() => {
-    getList();
-    proxy.$modal.msgSuccess("清空成功");
-  }).catch(() => {});
-}
-/** 导出按钮操作 */
-function handleExport() {
-  proxy.download("monitor/jobLog/export", {
-    ...queryParams.value,
-  }, `job_log_${new Date().getTime()}.xlsx`);
-}
 
 (() => {
-  const jobId = route.params && route.params.jobId;
-  if (jobId !== undefined && jobId != 0) {
-    getJob(jobId).then(response => {
-      queryParams.value.jobName = response.data.jobName;
-      queryParams.value.jobGroup = response.data.jobGroup;
-      getList();
-    });
-  } else {
-    getList();
-  }
+  queryParams.value.jobId = route.params?.jobId;
+  getList();
 })();
 
 getList();

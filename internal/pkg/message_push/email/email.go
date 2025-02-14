@@ -31,17 +31,25 @@ type MessagePush struct {
 	LiveId int
 }
 
-func (mp *MessagePush) Push(ctx context.Context, channel *model.PushChannel) (err error) {
+func (p *MessagePush) Push(ctx context.Context, channel *model.PushChannel) (err error) {
 	global := utils.GetGlobal(gctx.GetInitCtx())
-	lm := global.ModelsMap[mp.LiveId]
+	lm := global.ModelsMap[p.LiveId]
 	if lm.LiveManage.EnableNotice != 1 {
 		return
 	}
+	var model mp.MessageModel
+	model.Title = "开播通知"
+	model.Content = "你关注的主播["+lm.RoomInfo.Anchor+"]开播了！"
+	err = p.CustomPush(ctx, channel, &model)
+	return err
+}
+
+func (p *MessagePush) CustomPush(ctx context.Context, channel *model.PushChannel, model *mp.MessageModel) (err error) {
 	m := mail.NewMessage()
 	m.SetHeader("From", channel.Email.From)
 	m.SetHeader("To", channel.Email.To)
-	m.SetHeader("Subject", "开播通知["+lm.RoomInfo.Anchor+"]")
-	m.SetBody("text/html", "你关注的主播["+lm.RoomInfo.Anchor+"]开播了！")
+	m.SetHeader("Subject", model.Title)
+	m.SetBody("text/html", model.Content)
 	d := mail.NewDialer(channel.Email.Server, channel.Email.Port, channel.Email.From, channel.Email.AuthCode)
 	d.StartTLSPolicy = mail.MandatoryStartTLS
 	err = d.DialAndSend(m)
