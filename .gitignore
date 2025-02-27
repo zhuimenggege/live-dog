@@ -13,5 +13,6 @@ main.exe
 main.exe~
 output/
 resource/log/
+**/*/resource/log/
 resource/file/
 temp/

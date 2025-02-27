@@ -68,7 +68,8 @@ func IsTimeRange(st, et string) bool {
 	currentTime := time.Date(now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), 0, 0, now.Location())
 	if startTime.After(endTime) {
 		// 如果结束时间在开始时间之前，则认为是跨天
-		return currentTime.After(startTime) || currentTime.Before(endTime.AddDate(0, 0, 1))
+		return (currentTime.After(startTime) && currentTime.Before(endTime.AddDate(0, 0, 1))) ||
+			(currentTime.Before(startTime) && currentTime.Before(endTime))
 	} else {
 		// 正常情况
 		return currentTime.After(startTime) && currentTime.Before(endTime)
