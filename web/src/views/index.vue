@@ -51,7 +51,7 @@
 </template>
 
 <script setup name="Index">
-const version = ref("1.0.0");
+const version = ref("0.0.3");
 
 function goTarget(url) {
   window.open(url, "__blank");

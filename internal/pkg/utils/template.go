@@ -11,7 +11,7 @@ func GetOutputPathTemplate() *template.Template {
 		Must(template.
 			New("outputPathTemplate").
 			Funcs(getFuncsMap()).
-			Parse(`{{ outputPath }}/{{ .Platform }}/{{ .Anchor }}/{{ currentDate }}/`))
+			Parse(`{{ outputPath }}/{{ .Platform }}/{{ .Anchor }}/{{ currentMonth }}/`))
 }
 
 func GetFilenameTemplate(outputPath, format string) *template.Template {
@@ -29,6 +29,9 @@ func getFuncsMap() template.FuncMap {
 		},
 		"currentDate": func() string {
 			return gtime.Date()
+		},
+		"currentMonth": func() string {
+			return gtime.Now().Format("Y-m")
 		},
 		"outputPath": GetOutputPath,
 	}
