@@ -19,8 +19,5 @@ func (s status) Diff(that status) (res uint8) {
 	if s.roomStatus && !that.roomStatus {
 		res |= statusToFalseEvt
 	}
-	if s.roomStatus && that.roomStatus && (s.roomName != that.roomName || s.anchor != that.anchor) {
-		res |= nameChangedEvt
-	}
 	return res
 }

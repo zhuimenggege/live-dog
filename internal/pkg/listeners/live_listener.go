@@ -75,33 +75,31 @@ func (l *listener) refresh() {
 		evtTyp = "LiveStart"
 	case statusToFalseEvt:
 		evtTyp = "LiveEnd"
-	case nameChangedEvt:
-		evtTyp = "NameChanged"
 	}
 	if isStatusChanged {
 		l.ed.DispatchEvent(events.NewEvent(evtTyp, l.Live))
 	}
-
+	evtTyp = "NameChanged"
+	if !info.LiveStatus && l.nameChanged(info) {
+		l.ed.DispatchEvent(events.NewEvent(evtTyp, l.Live))
+	}
 }
 
 func (l *listener) getLatestStatus(info *lives.RoomInfo) status {
-	var latestStatus status
+	return status{
+		roomName:   info.RoomName,
+		anchor:     info.Anchor,
+		roomStatus: info.LiveStatus,
+	}
+}
+
+func (l *listener) nameChanged(info *lives.RoomInfo) bool {
 	global := utils.GetGlobal(gctx.GetInitCtx())
 	source, ok := global.ModelsMap[l.Live.GetLiveId()]
 	if ok {
-		latestStatus = status{
-			roomName:   source.RoomInfo.RoomName,
-			anchor:     source.RoomInfo.Anchor,
-			roomStatus: info.LiveStatus,
-		}
-	} else {
-		latestStatus = status{
-			roomName:   info.RoomName,
-			anchor:     info.Anchor,
-			roomStatus: info.LiveStatus,
-		}
+		return source.RoomInfo.Anchor != info.Anchor || source.RoomInfo.RoomName != info.RoomName
 	}
-	return latestStatus
+	return false
 }
 
 func (l *listener) run() {

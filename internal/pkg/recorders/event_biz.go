@@ -42,7 +42,7 @@ func addHistory(ctx context.Context, liveId int) {
 
 func (*manager) updateName(ctx context.Context, live lives.Live) {
 	roomInfo, err := live.GetInfo()
-	if err != nil {
+	if err == nil {
 		g.Try(ctx, func(ctx context.Context) {
 			//更新房间信息
 			_, e := dao.RoomInfo.Ctx(ctx).Where(dao.RoomInfo.Columns().LiveId, live.GetLiveId()).Update(do.RoomInfo{

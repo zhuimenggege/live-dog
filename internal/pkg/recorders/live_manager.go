@@ -54,12 +54,6 @@ func (m *manager) registryListener(ctx context.Context, ed events.Dispatcher) {
 	ed.AddEventListener("NameChanged", events.NewEventListener(func(event *events.Event) {
 		live := event.Object.(lives.Live)
 		m.updateName(ctx, live)
-		if !m.HasRecorder(ctx, live.GetLiveId()) {
-			return
-		}
-		if err := m.RestartRecorder(ctx, live); err != nil {
-			g.Log().Error(ctx, "failed to restart recorder")
-		}
 	}))
 
 	removeEvtListener := events.NewEventListener(func(event *events.Event) {
