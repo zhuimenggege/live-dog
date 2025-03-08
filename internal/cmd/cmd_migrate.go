@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/shichen437/live-dog/internal/app/admin/dao"
 	"github.com/shichen437/live-dog/internal/app/admin/model/do"
@@ -28,7 +29,15 @@ func Migrate() (err error) {
 		return
 	}
 	mysqlStr := strings.Replace(link, "mysql:", "mysql://", 1)
-	m, err := migrate.New("file://manifest/migrate", mysqlStr)
+	var m *migrate.Migrate
+	for i := 0; i < 3; i++ {
+		m, err = migrate.New("file://manifest/migrate", mysqlStr)
+		if err == nil {
+			break
+		}
+		g.Log().Error(ctx, "创建数据库失败，重试中...", err)
+		time.Sleep(5 * time.Second)
+	}
 	if err != nil {
 		g.Log().Error(ctx, "创建数据库失败", err)
 		return
