@@ -82,7 +82,7 @@ func (s *sMiddleware) HandlerResponse(r *ghttp.Request) {
 		}
 		msg = err.Error()
 	} else {
-		if r.Response.Status > 0 && r.Response.Status != http.StatusOK {
+		if r.Response.Status > 0 && r.Response.Status/100 != 2 {
 			msg = http.StatusText(r.Response.Status)
 			switch r.Response.Status {
 			case http.StatusNotFound:

@@ -33,8 +33,8 @@
                     <el-icon v-if="scope.row.isFolder">
                         <folder />
                     </el-icon>
-                    <el-icon v-else="scope.row.isFolder">
-                        <document />
+                    <el-icon v-else>
+                        <component :is="getFileIconType(scope.row.filename)" />
                     </el-icon>
                 </template>
             </el-table-column>
@@ -61,6 +61,10 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                 <template #default="scope">
+                    <el-tooltip content="播放" placement="top"
+                        v-if="isMediaFile(scope.row.filename) && !scope.row.isFolder">
+                        <el-button link type="primary" icon="VideoPlay" @click="handlePlay(scope.row)"></el-button>
+                    </el-tooltip>
                     <el-tooltip content="删除" placement="top">
                         <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
                             v-hasPermi="['file:manage:delete']"></el-button>
@@ -68,7 +72,14 @@
                 </template>
             </el-table-column>
         </el-table>
-
+        <el-dialog v-model="mediaDialog.visible" :title="mediaDialog.title" width="70%" destroy-on-close>
+            <div v-if="mediaDialog.type === 'video'">
+                <VideoPlayer :src="mediaDialog.src" :type="mediaDialog.fileType" :autoplay="false" :controls="true" />
+            </div>
+            <div v-else-if="mediaDialog.type === 'audio'">
+                <AudioPlayer :src="mediaDialog.src" :autoplay="false" />
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -82,6 +93,9 @@ import {
     formatSize,
 } from "@/utils/index";
 
+import VideoPlayer from '@/components/VideoPlayer/index.vue';
+import AudioPlayer from '@/components/AudioPlayer/index.vue';
+
 const { proxy } = getCurrentInstance();
 
 const fileList = ref([]);
@@ -90,6 +104,15 @@ const showSearch = ref(true);
 const filenames = ref([]);
 const single = ref(true);
 const multiple = ref(true);
+
+// 媒体播放对话框数据
+const mediaDialog = reactive({
+    visible: false,
+    title: '',
+    src: '',
+    type: '',
+    fileType: ''
+});
 
 const data = reactive({
     pathParts: [{ name: '系统目录', path: '/' }],
@@ -105,6 +128,71 @@ const navigateTo = (index) => {
     data.pathParts = data.pathParts.slice(0, index + 1);
     data.queryParams.path = data.pathParts[index].path;
     getList();
+}
+
+function getFileIconType(filename) {
+    if (!filename) return 'document';
+    const ext = filename.split('.').pop().toLowerCase();
+    if (['flv', 'mp4', 'mov', 'ts'].includes(ext)) {
+        return 'film';
+    }
+    if (['mp3', 'aac', 'flac', 'wav'].includes(ext)) {
+        return 'headset';
+    }
+    return 'document';
+}
+
+// 判断是否为媒体文件
+function isMediaFile(filename) {
+    if (!filename) return false;
+    const ext = filename.split('.').pop().toLowerCase();
+    return ['mp4', 'flv', 'aac', 'mp3'].includes(ext);
+}
+
+// 获取文件类型
+function getFileType(filename) {
+    if (!filename) return '';
+    const ext = filename.split('.').pop().toLowerCase();
+    if (['mp4'].includes(ext)) return 'mp4';
+    if (['flv'].includes(ext)) return 'flv';
+    if (['aac', 'mp3'].includes(ext)) return 'aac';
+    return '';
+}
+
+// 处理媒体播放
+async function handlePlay(row) {
+    const filename = row.filename;
+    const ext = filename.split('.').pop().toLowerCase();
+    const currentPath = data.queryParams.path || '/';
+    const filePath = currentPath === '/' ? filename : `${currentPath}/${filename}`;
+
+    try {
+        const baseUrl = import.meta.env.VITE_APP_BASE_API;
+        const mediaUrl = `${baseUrl}/file/manage/play?path=${filePath}`;
+
+        mediaDialog.title = filename;
+        mediaDialog.src = mediaUrl;
+        mediaDialog.fileType = getFileType(filename);
+
+        // 根据文件类型决定使用哪种播放器
+        if (['mp4', 'flv'].includes(ext)) {
+            mediaDialog.type = 'video';
+        } else if (['aac', 'mp3'].includes(ext)) {
+            mediaDialog.type = 'audio';
+        }
+
+        mediaDialog.visible = true;
+
+        // 在对话框关闭时释放 Blob URL
+        watch(() => mediaDialog.visible, (newValue) => {
+            if (!newValue) {
+                URL.revokeObjectURL(mediaUrl);
+            }
+        });
+    } catch (error) {
+        console.error('媒体加载失败:', error);
+        proxy.$modal.msgError('媒体加载失败');
+    }
 }
 
 // 打开子目录
