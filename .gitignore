@@ -16,3 +16,4 @@ resource/log/
 **/*/resource/log/
 resource/file/
 temp/
+docker-compose.yaml
