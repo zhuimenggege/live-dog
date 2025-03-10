@@ -168,7 +168,7 @@ async function handlePlay(row) {
 
     try {
         const baseUrl = import.meta.env.VITE_APP_BASE_API;
-        const mediaUrl = `${baseUrl}/file/manage/play?path=${filePath}`;
+        const mediaUrl = `${baseUrl}/file/manage/play?path=${encodeURIComponent(filePath)}`;
 
         mediaDialog.title = filename;
         mediaDialog.src = mediaUrl;
