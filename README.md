@@ -13,8 +13,9 @@ Live Dog 是一个基于 GoFrame 和 RuoYi-Vue3 构建的直播录制工具（�
 
 <img src="./resource/assets/screenshots/live/live_manage.jpg" />
 <div align="center">
-  <img src="./resource/assets/screenshots/live/live_add.jpg" width="49%" />
-  <img src="./resource/assets/screenshots/admin/push_channel_add.jpg" width="49%" />
+  <img src="./resource/assets/screenshots/live/live_add.jpg" width="32%" />
+  <img src="./resource/assets/screenshots/admin/push_channel_add.jpg" width="32%" />
+  <img src="./resource/assets/screenshots/live/media_parse.jpg" width="32%" />
 </div>
 
 ## 架构
@@ -24,9 +25,21 @@ Live Dog 是一个基于 GoFrame 和 RuoYi-Vue3 构建的直播录制工具（�
 
 ## 内置功能
 
-1. 系统管理（基础用户、角色、菜单、配置管理等）
-2. 系统监控（服务器、定时任务等）
-3. 直播管理（定时监控、Cookie、开播推送等）
+1. 直播管理
+    - 直播列表
+    - 直播历史
+    - 文件管理
+    - 每日统计
+    - 媒体解析（单视频链接）
+2. 系统管理
+    - 用户管理
+    - 角色管理
+    - 菜单管理
+    - 字典管理
+    - 推送渠道（邮件、Gotify）
+3. 系统监控
+    - 服务器监控
+    - 定时任务（空间预警）
 
 ## 系统环境
 

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"math/rand"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -129,4 +130,16 @@ func UnicodeIndex(str, substr string) int {
 		result = len(rs)
 	}
 	return result
+}
+
+func FindFirstMatch(s, reg string) string {
+	re, err := regexp.Compile(reg)
+	if err != nil {
+		return ""
+	}
+	matches := re.FindStringSubmatch(s)
+	if len(matches) > 0 {
+		return matches[0]
+	}
+	return ""
 }
