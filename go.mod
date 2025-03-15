@@ -5,8 +5,8 @@ go 1.22.7
 require (
 	github.com/goflyfox/gtoken v1.5.10
 	github.com/gogf/gf v1.16.9
-	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.8.0
-	github.com/gogf/gf/v2 v2.8.0
+	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.8.3
+	github.com/gogf/gf/v2 v2.8.3
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/google/uuid v1.6.0
 	github.com/lthibault/jitterbug v2.0.0+incompatible
@@ -35,7 +35,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
-	github.com/magiconair/properties v1.8.7 // indirect
+	github.com/magiconair/properties v1.8.9 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
