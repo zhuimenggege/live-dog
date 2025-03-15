@@ -1,6 +1,7 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container"
+      @toggleClick="toggleSideBar" />
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
     <top-nav id="topmenu-container" class="topmenu-container" v-if="settingsStore.topNav" />
 
@@ -44,7 +45,7 @@
 </template>
 
 <script setup>
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElNotification } from 'element-plus'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
@@ -59,6 +60,42 @@ import useSettingsStore from '@/store/modules/settings'
 const appStore = useAppStore()
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
+
+let eventSource = null;
+
+onMounted(() => {
+  // 创建SSE连接
+  eventSource = new EventSource(`${import.meta.env.VITE_APP_BASE_API || ''}/sse`)
+
+  // 消息监听
+  eventSource.onmessage = (e) => {
+    try {
+      const data = JSON.parse(e.data)
+      ElNotification({
+        title: data.event === 'liveStart' ? '开播通知' :
+          data.event === 'liveEnd' ? '下播通知' :
+            '系统提醒',
+        message: data.data.message || '您有新的系统通知',
+        type: 'success',
+        duration: 10000
+      })
+    } catch (err) {
+      console.error('SSE解析错误:', err)
+    }
+  }
+
+  // 错误处理
+  eventSource.onerror = (e) => {
+    console.error('SSE连接异常:', e)
+    eventSource.close()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (eventSource) {
+    eventSource.close()
+  }
+})
 
 function toggleSideBar() {
   appStore.toggleSideBar()
@@ -78,6 +115,9 @@ function handleCommand(command) {
 }
 
 function logout() {
+  if (eventSource) {
+    eventSource.close()
+  }
   ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',

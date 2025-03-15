@@ -14,6 +14,7 @@ import (
 	"github.com/shichen437/live-dog/internal/app/common/service"
 	live "github.com/shichen437/live-dog/internal/app/live/controller"
 	monitor "github.com/shichen437/live-dog/internal/app/monitor/controller"
+	"github.com/shichen437/live-dog/internal/pkg/sse"
 	"github.com/shichen437/live-dog/internal/pkg/utils"
 
 	"github.com/goflyfox/gtoken/gtoken"
@@ -45,6 +46,7 @@ var (
 			s.AddStaticPath(consts.AvatarPrefix, utils.GetFileUploadPath()+consts.AvatarPrefix)
 			s.Use(service.Middleware().HandlerResponse) //返回数据处理
 			s.SetSwaggerUITemplate(consts.MySwaggerUITemplate)
+			s.BindHandler("/sse", sse.HandleSSE)
 			s.Group("/", func(group *ghttp.RouterGroup) {
 
 				// Group middlewares.
