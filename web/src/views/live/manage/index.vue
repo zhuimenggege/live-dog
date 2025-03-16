@@ -223,12 +223,18 @@ function submitForm() {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
+          setTimeout(() => {
+            getList();
+          }, 1500);
         });
       } else {
         addLiveManage(form.value).then((response) => {
           proxy.$modal.msgSuccess("添加成功");
           open.value = false;
           getList();
+          setTimeout(() => {
+            getList();
+          }, 1500);
         });
       }
     }
