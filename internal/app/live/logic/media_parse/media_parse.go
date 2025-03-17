@@ -61,7 +61,7 @@ func (s *sMediaParse) List(ctx context.Context, req *v1.GetMediaParseListReq) (r
 	var list []*entity.MediaParse
 	m := dao.MediaParse.Ctx(ctx)
 	if req.Author != "" {
-		m = m.Where("author", req.Author)
+		m = m.WhereLike(dao.MediaParse.Columns().Author, "%"+req.Author+"%")
 	}
 	m = m.OrderDesc(dao.MediaParse.Columns().Id)
 	res.Total, err = m.Count()
