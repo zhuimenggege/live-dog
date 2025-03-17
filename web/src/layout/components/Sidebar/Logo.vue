@@ -25,7 +25,7 @@ defineProps({
   }
 })
 
-const title = ref('LiveDog 监控平台');
+const title = import.meta.env.VITE_APP_TITLE;
 const settingsStore = useSettingsStore();
 const sideTheme = computed(() => settingsStore.sideTheme);
 </script>

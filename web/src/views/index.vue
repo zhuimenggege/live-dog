@@ -6,8 +6,8 @@
       </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>LiveDog 监控平台</h2>
+      <el-col :sm="24" :lg="12" class="left-column">
+        <h2>{{ appTitle }}</h2>
         <p></p>
         <p>
           <b>当前版本:</b> <span>v{{ version }}</span>
@@ -17,7 +17,7 @@
         </p>
       </el-col>
 
-      <el-col :sm="24" :lg="12" style="padding-left: 50px">
+      <el-col :sm="24" :lg="12" class="right-column">
         <el-row>
           <el-col :span="12">
             <h2>技术选型</h2>
@@ -27,19 +27,21 @@
           <el-col :span="6">
             <h4>后端技术</h4>
             <ul>
-              <li>Golang 1.22</li>
-              <li>GoFrame v2</li>
-              <li>MySQL</li>
-              <li>Redis</li>
+              <li>golang</li>
+              <li>goframe v2</li>
+              <li>mysql</li>
+              <li>golang-migrate</li>
               <li>...</li>
             </ul>
           </el-col>
           <el-col :span="6">
             <h4>前端技术</h4>
             <ul>
-              <li>Vue3</li>
-              <li>RuoYi-Vue3</li>
-              <li>Element Plus</li>
+              <li>ruoyi-vue3</li>
+              <li>element-plus</li>
+              <li>xgplayer</li>
+              <li>mpegts.js</li>
+              <li>howler</li>
               <li>...</li>
             </ul>
           </el-col>
@@ -51,7 +53,8 @@
 </template>
 
 <script setup name="Index">
-const version = ref("0.0.3");
+const appTitle = import.meta.env.VITE_APP_TITLE;
+const version = import.meta.env.VITE_APP_VERSION;
 
 function goTarget(url) {
   window.open(url, "__blank");
@@ -59,19 +62,35 @@ function goTarget(url) {
 </script>
 
 <style scoped lang="scss">
+.left-column {
+  padding-left: 20px;
+}
+
+.right-column {
+  padding-left: 50px;
+}
+
+$font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-color: #676a6c;
+$blockquote-border-color: #eee;
+
 .home {
+  font-family: $font-family;
+  font-size: 13px;
+  color: $font-color;
+  overflow-x: hidden;
+
   blockquote {
     padding: 10px 20px;
     margin: 0 0 20px;
     font-size: 17.5px;
-    border-left: 5px solid #eee;
+    border-left: 5px solid $blockquote-border-color;
   }
 
   hr {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 20px 0;
     border: 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid $blockquote-border-color;
   }
 
   .col-item {
@@ -81,23 +100,11 @@ function goTarget(url) {
   ul {
     padding: 0;
     margin: 0;
-  }
-
-  font-family: "open sans",
-  "Helvetica Neue",
-  Helvetica,
-  Arial,
-  sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
-
-  ul {
     list-style-type: none;
   }
 
   h4 {
-    margin-top: 0px;
+    margin-top: 0;
   }
 
   h2 {
@@ -118,10 +125,7 @@ function goTarget(url) {
     ol {
       display: block;
       list-style-type: decimal;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      margin-inline-start: 0;
-      margin-inline-end: 0;
+      margin: 1em 0;
       padding-inline-start: 40px;
     }
   }
