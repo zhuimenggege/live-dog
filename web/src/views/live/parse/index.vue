@@ -25,8 +25,13 @@
         <!-- 表格数据 -->
         <el-table v-loading="loading" :data="parseList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center" />
-            <el-table-column label="数据ID" align="center" prop="id" width="120" />
-            <el-table-column label="媒体类型" align="center" width="120" :show-overflow-tooltip="true">
+            <el-table-column label="数据ID" align="center" prop="id" width="80" />
+            <el-table-column label="平台" align="center" prop="platform" :show-overflow-tooltip="true" width="80">
+                <template #default="scope">
+                    <dict-tag :options="sys_internal_assist_live_platform" :value="scope.row.platform" />
+                </template>
+            </el-table-column>
+            <el-table-column label="媒体类型" align="center" width="80" :show-overflow-tooltip="true">
                 <template #default="scope">
                     <span v-if="scope.row.type === 'video'">视频</span>
                     <span v-if="scope.row.type === 'music'">音乐</span>
@@ -40,7 +45,7 @@
                         style="width: 100px; height: auto;" />
                 </template>
             </el-table-column>
-            <el-table-column label="作者" align="center" prop="author" :show-overflow-tooltip="true" width="160" />
+            <el-table-column label="作者" align="center" prop="author" :show-overflow-tooltip="true" width="140" />
             <el-table-column label="作品描述" align="center" prop="desc" :show-overflow-tooltip="true" width="240" />
             <el-table-column label="解析时间" align="center" prop="createTime" :show-overflow-tooltip="true" width="160" />
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -74,7 +79,7 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog title="详情信息" v-model="detailDialog" width="60%">
+        <el-dialog title="解析详情" v-model="detailDialog" width="60%">
             <el-descriptions :column="2" border v-if="detailData">
                 <el-descriptions-item label="媒体类型" :span="1">
                     <span v-if="detailData.type === 'video'">视频</span>
@@ -110,6 +115,7 @@ import {
 } from "@/api/live/parse";
 
 const { proxy } = getCurrentInstance();
+const { sys_internal_assist_live_platform } = proxy.useDict("sys_internal_assist_live_platform");
 
 const parseList = ref([]);
 const parse = ref(false);
