@@ -245,7 +245,7 @@
                   <el-popover
                     placement="right"
                     title="任务参数"
-                    :width="200"
+                    :width="300"
                     effect="dark"
                     trigger="hover"
                   >

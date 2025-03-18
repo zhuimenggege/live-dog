@@ -40,18 +40,24 @@ func (s *sMediaParse) Parse(ctx context.Context, req *v1.PostMediaParseReq) (res
 	if err != nil {
 		return
 	}
+	mediaInfo := do.MediaParse{
+		Platform:   info.Platform,
+		Author:     info.Author,
+		AuthorUid:  info.AuthorUid,
+		MediaId:    info.VideoID,
+		Desc:       info.Desc,
+		Type:       info.Type,
+		CreateTime: gtime.Now(),
+	}
 	if info.Type == "video" {
-		dao.MediaParse.Ctx(ctx).Insert(do.MediaParse{
-			Platform:      info.Platform,
-			Author:        info.Author,
-			AuthorUid:     info.AuthorUid,
-			MediaId:       info.VideoID,
-			Desc:          info.Desc,
-			Type:          info.Type,
-			VideoUrl:      info.VideoUrl,
-			VideoCoverUrl: info.VideoCoverUrl,
-			CreateTime:    gtime.Now(),
-		})
+		mediaInfo.VideoUrl = info.VideoUrl
+		mediaInfo.VideoCoverUrl = info.VideoCoverUrl
+		dao.MediaParse.Ctx(ctx).Insert(mediaInfo)
+	}
+	if info.Type == "note" {
+		mediaInfo.ImagesUrl = info.ImagesUrl
+		mediaInfo.ImagesCoverUrl = info.ImagesCoverUrl
+		dao.MediaParse.Ctx(ctx).Insert(mediaInfo)
 	}
 	return nil, nil
 }

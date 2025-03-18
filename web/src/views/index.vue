@@ -50,11 +50,31 @@
     </el-row>
     <el-divider />
   </div>
+  <div class="masonry-container">
+    <div class="masonry-layout">
+      <div class="masonry-item" v-for="(card, index) in cards" :key="index">
+        <el-card shadow="hover">
+          <h3>{{ card.title }}</h3>
+          <ul>
+            <li v-for="(item, idx) in card.items" :key="idx">{{ item }}</li>
+          </ul>
+        </el-card>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup name="Index">
 const appTitle = import.meta.env.VITE_APP_TITLE;
 const version = import.meta.env.VITE_APP_VERSION;
+
+const cards = [
+  { title: '录制平台', items: ['抖音(cookie可选)'] },
+  { title: '媒体解析(需配置cookie)', items: ['web抖音分享链接(视频/图集)'] },
+  { title: '定时任务', items: ['空间预警(需配置推送渠道)'] },
+  { title: '推送渠道', items: ['邮箱', 'Gotify'] },
+  { title: '其它', items: ['定时监控', '直播历史', '文件管理', 'Cookie管理'] },
+];
 
 function goTarget(url) {
   window.open(url, "__blank");
@@ -62,6 +82,20 @@ function goTarget(url) {
 </script>
 
 <style scoped lang="scss">
+.masonry-container {
+  padding: 0 20px;
+}
+
+.masonry-layout {
+  column-count: 3; // 设置为三列
+  column-gap: 20px;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 20px;
+}
+
 .left-column {
   padding-left: 20px;
 }

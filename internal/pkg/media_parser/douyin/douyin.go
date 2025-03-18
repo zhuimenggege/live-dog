@@ -51,9 +51,10 @@ func (d *DouyinParser) ParseURL(ctx context.Context) (*media_parser.MediaInfo, e
 	resp, err := c.Get(ctx, d.Url)
 	if err != nil {
 		g.Log().Error(ctx, err)
-		return nil, err
+		return nil, gerror.New("请求链接失败, 请检查 Cookie 设置")
 	}
 	mediaUrl := resp.Response.Request.URL.String()
+	// 视频
 	if strings.Contains(mediaUrl, "/video/") {
 		videoId := strings.TrimPrefix(utils.FindFirstMatch(mediaUrl, `video/(\d+)?`), "video/")
 		videoInfo, err := getVideoInfo(ctx, videoId)
@@ -62,7 +63,15 @@ func (d *DouyinParser) ParseURL(ctx context.Context) (*media_parser.MediaInfo, e
 		}
 		return videoInfo, nil
 	}
-
+	// 图集
+	if strings.Contains(mediaUrl, "/note/") {
+		videoId := strings.TrimPrefix(utils.FindFirstMatch(mediaUrl, `note/(\d+)?`), "note/")
+		videoInfo, err := getVideoInfo(ctx, videoId)
+		if err != nil {
+			return nil, err
+		}
+		return videoInfo, nil
+	}
 	return nil, gerror.New("不支持的抖音链接")
 }
 
@@ -86,6 +95,28 @@ func getVideoInfo(ctx context.Context, videoId string) (*media_parser.MediaInfo,
 	data := gjson.GetBytes(jsonBytes, "loaderData.video_(id)/page.videoInfoRes.item_list.0")
 	if !data.Exists() {
 		return nil, gerror.New("未获取到有效信息")
+	}
+	// 获取图集图片地址
+	imagesObj := data.Get("images").Array()
+	images := make([]string, 0, len(imagesObj))
+	for _, imageItem := range imagesObj {
+		imageUrl := imageItem.Get("url_list.0").String()
+		if len(imageUrl) > 0 {
+			images = append(images, imageUrl)
+		}
+	}
+	if len(images) > 0 {
+		imagesInfo := &media_parser.MediaInfo{
+			Platform:       platform,
+			VideoID:        videoId,
+			Author:         data.Get("author.nickname").String(),
+			AuthorUid:      data.Get("author.sec_uid").String(),
+			Desc:           data.Get("desc").String(),
+			Type:           "note",
+			ImagesUrl:      strings.Join(images, ","),
+			ImagesCoverUrl: data.Get("video.cover.url_list.0").String(),
+		}
+		return imagesInfo, nil
 	}
 	// 获取视频播放地址
 	videoInfo := &media_parser.MediaInfo{

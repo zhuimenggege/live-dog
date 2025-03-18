@@ -35,6 +35,7 @@
                 <template #default="scope">
                     <span v-if="scope.row.type === 'video'">视频</span>
                     <span v-if="scope.row.type === 'music'">音乐</span>
+                    <span v-if="scope.row.type === 'note'">图集</span>
                 </template>
             </el-table-column>
             <el-table-column label="作品封面" align="center" width="240">
@@ -42,6 +43,8 @@
                     <img v-if="scope.row.type === 'video'" :src="scope.row.videoCoverUrl" alt="视频封面"
                         style="width: 100px; height: auto;" />
                     <img v-if="scope.row.type === 'music'" :src="scope.row.musicCoverUrl" alt="音乐封面"
+                        style="width: 100px; height: auto;" />
+                    <img v-if="scope.row.type === 'note'" :src="scope.row.imagesCoverUrl" alt="图集封面"
                         style="width: 100px; height: auto;" />
                 </template>
             </el-table-column>
@@ -66,6 +69,19 @@
             v-model:limit="queryParams.pageSize" @pagination="getList" />
 
         <el-dialog title="媒体解析" v-model="parse" align-center close-on-press-escape>
+            <template #title>
+                媒体解析
+                <el-popover placement="right" title="支持平台及类型" :width="300" effect="dark" trigger="hover">
+                    <div slot="content">
+                        抖音web版分享链接(视频/图集)
+                    </div>
+                    <template #reference>
+                        <el-icon class="m-2">
+                            <InfoFilled />
+                        </el-icon>
+                    </template>
+                </el-popover>
+            </template>
             <el-form ref="parseRef" :model="form" :rules="rules" label-width="100px">
                 <el-form-item label="解析链接" prop="url" class="centered-form-item">
                     <el-input v-model="form.url" placeholder="请输入解析链接" clearable size="large">
@@ -84,6 +100,7 @@
                 <el-descriptions-item label="媒体类型" :span="1">
                     <span v-if="detailData.type === 'video'">视频</span>
                     <span v-if="detailData.type === 'music'">音乐</span>
+                    <span v-if="detailData.type === 'note'">图集</span>
                 </el-descriptions-item>
                 <el-descriptions-item label="媒体ID" :span="1">{{ detailData.mediaId }}</el-descriptions-item>
                 <el-descriptions-item label="作者" :span="1">{{ detailData.author }}</el-descriptions-item>
@@ -95,11 +112,22 @@
                 <el-descriptions-item label="音乐封面" :span="2" v-if="detailData.type === 'music'">
                     <img :src="detailData.musicCoverUrl" alt="音乐封面" style="width: 100px; height: auto;" />
                 </el-descriptions-item>
+                <el-descriptions-item label="图集封面" :span="2" v-if="detailData.type === 'note'">
+                    <img :src="detailData.imagesCoverUrl" alt="图集封面" style="width: 100px; height: auto;" />
+                </el-descriptions-item>
                 <el-descriptions-item label="视频链接" :span="2" v-if="detailData.type === 'video'">
                     <a :href="detailData.videoUrl" target="_blank">{{ detailData.videoUrl }}</a>
                 </el-descriptions-item>
                 <el-descriptions-item label="音乐链接" :span="2" v-if="detailData.type === 'music'">
                     <a :href="detailData.musicUrl" target="_blank">{{ detailData.musicUrl }}</a>
+                </el-descriptions-item>
+                <el-descriptions-item label="图集链接" :span="2" v-if="detailData.type === 'note'">
+                    <el-scrollbar style="max-height: 100px; overflow-y: auto;">
+                        <div v-for="(url, index) in detailData.imagesUrl.split(',')" :key="index"
+                            class="link-container">
+                            <a :href="url.trim()" target="_blank" class="link" :title="url.trim()">{{ url.trim() }}</a>
+                        </div>
+                    </el-scrollbar>
                 </el-descriptions-item>
             </el-descriptions>
         </el-dialog>
@@ -223,4 +251,19 @@ function handleSelectionChange(selection) {
 getList();
 </script>
 
-<style scoped></style>
+<style scoped>
+.link-container {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.link {
+    display: inline-block;
+    max-width: 80ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+</style>
