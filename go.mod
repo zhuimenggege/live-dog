@@ -3,6 +3,7 @@ module github.com/shichen437/live-dog
 go 1.22.7
 
 require (
+	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c
 	github.com/goflyfox/gtoken v1.5.10
 	github.com/gogf/gf v1.16.9
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.8.3
@@ -22,14 +23,17 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect
+	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/google/pprof v0.0.0-20230207041349-798e818bf904 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/grokify/html-strip-tags-go v0.1.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
