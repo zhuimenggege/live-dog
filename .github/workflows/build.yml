@@ -1,0 +1,80 @@
+name: Build live-dog v0.0.6
+
+on:
+  workflow_dispatch:  # 允许手动触发
+  push:
+    branches: [ "v0.0.6" ]  # 仅针对 v0.0.6 分支的推送触发
+
+jobs:
+  build:
+    name: Build Binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        go: [ '1.21' ]  # 根据项目要求调整 Go 版本
+        include:
+          - os: ubuntu-latest
+            ext: ""
+            target: linux
+          - os: macos-latest
+            ext: ""
+            target: darwin
+          - os: windows-latest
+            ext: ".exe"
+            target: windows
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: v0.0.6  # 明确指定分支
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.target }}
+          GOARCH: amd64
+          CGO_ENABLED: 0  # 禁用 CGO 以静态编译
+        run: |
+          go build -v -o bin/live-dog-${{ matrix.target }}${{ matrix.ext }} ./main.go
+
+      - name: Package Artifacts
+        shell: bash
+        run: |
+          mkdir -p release
+          tar -czvf release/live-dog-${{ matrix.target }}.tar.gz -C bin .
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-dog-binaries
+          path: release/
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: live-dog-binaries
+          path: release/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v0.0.6  # 自动创建对应 tag
+          files: |
+            release/*.tar.gz
+          body: |
+            Prebuilt binaries for live-dog v0.0.6
+            - Linux: `live-dog-linux.tar.gz`
+            - macOS: `live-dog-darwin.tar.gz`
+            - Windows: `live-dog-windows.tar.gz`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
